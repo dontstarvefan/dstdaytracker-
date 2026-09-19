@@ -6,8 +6,16 @@
 <title>DST Day & Season Tracker</title>
 <meta name="description" content="Free Don't Starve Together day tracker. Instantly see what season you're in, when winter/summer start and end, moon phase and full moon nights, and predicted spawn days for Deerclops, Bearger, Moose/Goose, and Antlion.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Stint+Ultra+Condensed&display=swap" rel="stylesheet">
 <style>
+  /* Uses Belisa Plumilla Manual if belisa_plumilla.ttf is uploaded alongside
+     this HTML file; otherwise falls back to Caveat automatically. */
+  @font-face {
+    font-family: 'Belisa Plumilla Manual';
+    src: url('belisa_plumilla.ttf') format('truetype');
+    font-display: swap;
+  }
+
   :root {
     --bg-deep: #0c0a06;
     --bg-mid: #1e1811;
@@ -54,7 +62,7 @@
     background: radial-gradient(ellipse at 50% 0%, var(--bg-mid) 0%, var(--bg-deep) 70%);
     background-attachment: fixed;
     color: var(--ink);
-    font-family: 'Crimson Text', Georgia, serif;
+    font-family: 'Stint Ultra Condensed', Georgia, serif;
     margin: 0;
     padding: 0 0 3rem;
     min-height: 100vh;
@@ -98,7 +106,7 @@
   }
 
   .topbar-title {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
     font-size: clamp(1.3rem, 5.5vw, 1.7rem);
     color: var(--paper);
     letter-spacing: 0.01em;
@@ -110,7 +118,7 @@
     background: var(--paper);
     border: 2px solid var(--ink);
     color: var(--ink);
-    font-family: 'Crimson Text', serif;
+    font-family: 'Stint Ultra Condensed', serif;
     font-weight: 600;
     font-size: 0.78rem;
     padding: 0.35rem 0.85rem;
@@ -153,7 +161,7 @@
     gap: 0.75rem;
   }
   .card-head h2 {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
     font-weight: 400;
     font-size: 1.15rem;
     letter-spacing: 0.01em;
@@ -172,7 +180,7 @@
   }
 
   input[type="number"], select {
-    font-family: 'Crimson Text', serif;
+    font-family: 'Stint Ultra Condensed', serif;
     font-size: 1.05rem;
     background: #f4ecd6;
     color: var(--ink);
@@ -199,7 +207,7 @@
     border: 2px solid var(--ink);
     color: #f4ecd6;
     padding: 0.65rem 0.9rem;
-    font-family: 'Crimson Text', serif;
+    font-family: 'Stint Ultra Condensed', serif;
     font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
@@ -229,7 +237,7 @@
   }
 
   .readout-text .season-name {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
     font-weight: 400;
     font-size: 1.55rem;
     margin: 0;
@@ -300,7 +308,7 @@
   }
   .moon-readout-text p { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 0.92rem; }
   .moon-readout-text .season-name {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
     font-weight: 400;
     font-size: 1.3rem;
     margin: 0;
@@ -353,7 +361,7 @@
     background: var(--paper);
     border: 2px solid var(--ink);
     color: var(--ink);
-    font-family: 'Crimson Text', serif;
+    font-family: 'Stint Ultra Condensed', serif;
     font-weight: 600;
     font-size: 0.8rem;
     cursor: pointer;
@@ -385,7 +393,7 @@
     border: 2px solid var(--ink);
     color: var(--ink);
     padding: 0.4rem 0.75rem;
-    font-family: 'Crimson Text', serif;
+    font-family: 'Stint Ultra Condensed', serif;
     font-weight: 600;
     font-size: 0.82rem;
     cursor: pointer;
@@ -411,7 +419,7 @@
     background: var(--paper-shadow);
     color: var(--ink);
     padding: 0.35rem 0.85rem;
-    font-family: 'Crimson Text', serif;
+    font-family: 'Stint Ultra Condensed', serif;
     font-weight: 600;
     font-size: 0.87rem;
     cursor: pointer;
@@ -581,20 +589,44 @@
     <div class="card-body" id="settingsPanel" style="display:none;">
       <div class="settings-grid">
         <div>
-          <div class="season-label"><span class="swatch" style="background:var(--autumn)"></span>Autumn (days)</div>
-          <input type="number" id="len-autumn" min="0" value="20">
+          <div class="season-label"><span class="swatch" style="background:var(--autumn)"></span>Autumn</div>
+          <select id="len-autumn">
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
         </div>
         <div>
-          <div class="season-label"><span class="swatch" style="background:var(--winter)"></span>Winter (days)</div>
-          <input type="number" id="len-winter" min="0" value="15">
+          <div class="season-label"><span class="swatch" style="background:var(--winter)"></span>Winter</div>
+          <select id="len-winter">
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
         </div>
         <div>
-          <div class="season-label"><span class="swatch" style="background:var(--spring)"></span>Spring (days)</div>
-          <input type="number" id="len-spring" min="0" value="20">
+          <div class="season-label"><span class="swatch" style="background:var(--spring)"></span>Spring</div>
+          <select id="len-spring">
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
         </div>
         <div>
-          <div class="season-label"><span class="swatch" style="background:var(--summer)"></span>Summer (days)</div>
-          <input type="number" id="len-summer" min="0" value="15">
+          <div class="season-label"><span class="swatch" style="background:var(--summer)"></span>Summer</div>
+          <select id="len-summer">
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
         </div>
         <div class="full">
           <label for="startSeason">World starts in</label>
@@ -664,6 +696,15 @@
   const SEASON_ORDER = ['autumn', 'winter', 'spring', 'summer'];
   const DEFAULT_LENGTHS = { autumn: 20, winter: 15, spring: 20, summer: 15 };
 
+  // Day counts behind each named preset, matching DST's own world customization
+  // menu (Autumn/Spring default to 20-day years, Winter/Summer to 15-day years).
+  const SEASON_PRESETS = {
+    autumn: { veryshort: 5, short: 12, default: 20, long: 30, verylong: 50 },
+    winter: { veryshort: 5, short: 10, default: 15, long: 22, verylong: 40 },
+    spring: { veryshort: 5, short: 12, default: 20, long: 30, verylong: 50 },
+    summer: { veryshort: 5, short: 10, default: 15, long: 22, verylong: 40 }
+  };
+
   // Links to the current, actively-maintained Don't Starve wiki (the community
   // wiki migrated from Fandom to wiki.gg in Sept 2023).
   const SEASON_LINKS = {
@@ -677,9 +718,6 @@
   const MOON_CYCLE = 20; // days
   const MOON_PHASE_NAMES = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
   const MOON_PHASE_ICONS = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
-  // Cumulative day-in-cycle boundaries for each phase (0-indexed), matching the
-  // wiki's day-11 first full moon: New(2d) Waxing Crescent(3d) 1stQtr(2d) Waxing
-  // Gibbous(3d) Full(2d) Waning Gibbous(3d) LastQtr(2d) Waning Crescent(3d).
   const MOON_BOUNDS = [0, 2, 5, 7, 10, 12, 15, 17, 20];
 
   function moonPhaseIndexFromDayIndex(dayIndex) {
@@ -695,7 +733,6 @@
     spring: { name: 'Moose/Goose', icon: '🦢', link: 'https://dontstarve.wiki.gg/wiki/Moose/Goose' },
     summer: { name: 'Antlion', icon: '🐜', link: 'https://dontstarve.wiki.gg/wiki/Antlion' }
   };
-
 
   const el = (id) => document.getElementById(id);
   const dayInput = el('dayInput');
@@ -735,7 +772,9 @@
     if (savedLens) {
       try {
         const parsed = JSON.parse(savedLens);
-        SEASON_ORDER.forEach(s => { if (parsed[s] != null) lenInputs[s].value = parsed[s]; });
+        SEASON_ORDER.forEach(s => {
+          if (parsed[s] != null && SEASON_PRESETS[s][parsed[s]] != null) lenInputs[s].value = parsed[s];
+        });
       } catch (e) { /* ignore */ }
     }
     if (savedStart) startSeasonSel.value = savedStart;
@@ -747,8 +786,8 @@
   function getLengths() {
     const l = {};
     SEASON_ORDER.forEach(s => {
-      const v = parseInt(lenInputs[s].value, 10);
-      l[s] = (isNaN(v) || v < 0) ? 0 : v;
+      const key = lenInputs[s].value;
+      l[s] = SEASON_PRESETS[s][key] != null ? SEASON_PRESETS[s][key] : SEASON_PRESETS[s].default;
     });
     return l;
   }
@@ -763,13 +802,12 @@
     return SEASON_ORDER.reduce((sum, s) => sum + lengths[s], 0);
   }
 
-  // Returns { season, dayOfSeason, daysLeftInSeason, cycleIndex, dayInCycle }
   function locateDay(day, lengths, order) {
     const cycleLen = getCycleLength(lengths);
     if (cycleLen <= 0) return null;
     const zeroDay = day - 1;
     const cycleIndex = Math.floor(zeroDay / cycleLen);
-    let dayInCycle = zeroDay % cycleLen; // 0-indexed within cycle
+    let dayInCycle = zeroDay % cycleLen;
     let acc = 0;
     for (const s of order) {
       const len = lengths[s];
@@ -785,7 +823,6 @@
       }
       acc += len;
     }
-    // fallback (all lengths zero or rounding) -> first non-zero season
     return { season: order.find(s => lengths[s] > 0) || order[0], dayOfSeason: 1, daysLeftInSeason: 1, cycleIndex, dayInCycle };
   }
 
@@ -801,7 +838,12 @@
     const cycleLen = getCycleLength(lengths);
 
     safeSet('dst_day', String(day));
-    safeSet('dst_lengths', JSON.stringify(lengths));
+    safeSet('dst_lengths', JSON.stringify({
+      autumn: lenInputs.autumn.value,
+      winter: lenInputs.winter.value,
+      spring: lenInputs.spring.value,
+      summer: lenInputs.summer.value
+    }));
     safeSet('dst_start', startSeasonSel.value);
     safeSet('dst_years', yearsInput.value);
     safeSet('dst_moon_cycles', moonCyclesInput.value);
@@ -830,7 +872,6 @@
       el('seasonRemaining').textContent = `${loc.daysLeftInSeason} days left before ${nextS}`;
     }
 
-    // Cycle bar
     const bar = el('cycleBar');
     bar.innerHTML = '';
     order.forEach(s => {
@@ -848,7 +889,6 @@
     marker.style.left = (loc.dayInCycle / cycleLen * 100) + '%';
     bar.appendChild(marker);
 
-    // Legend
     const legend = el('legend');
     legend.innerHTML = '';
     order.forEach(s => {
@@ -866,13 +906,12 @@
   }
 
   function renderMoon(day) {
-    const dayIndex = (day - 1) % MOON_CYCLE; // 0-indexed within a 20-day moon cycle
+    const dayIndex = (day - 1) % MOON_CYCLE;
     const phaseIdx = moonPhaseIndexFromDayIndex(dayIndex);
 
     el('moonBadge').textContent = MOON_PHASE_ICONS[phaseIdx];
     el('moonPhaseName').innerHTML = `<a href="${MOON_LINK}" target="_blank" rel="noopener">${MOON_PHASE_NAMES[phaseIdx]}</a>`;
 
-    // Full moon lands on the day whose (day-1) % 20 === 10; new moon on (day-1) % 20 === 0
     const daysToFull = (10 - dayIndex + MOON_CYCLE) % MOON_CYCLE;
     const daysToNew = (0 - dayIndex + MOON_CYCLE) % MOON_CYCLE;
 
@@ -894,19 +933,15 @@
     });
   }
 
-  // Predicted spawn window for a giant, given the absolute start day and length
-  // of the specific season occurrence it belongs to. Ratios are drawn from the
-  // Don't Starve Together wiki's documented default-settings spawn timings and
-  // scaled proportionally to whatever season length is configured.
   function giantPrediction(season, startDay, len, cycleIndex) {
     if (len <= 0) return null;
     if (season === 'winter') {
-      const day = Math.floor(startDay - 1 + 0.72 * len); // ~day 30 by default (10.8 days into a 15-day winter)
+      const day = Math.floor(startDay - 1 + 0.72 * len);
       return { text: `~day ${day}`, note: 'night of that day' };
     }
     if (season === 'autumn') {
       if (cycleIndex === 0) return { text: 'not yet', note: "skips the world's first autumn" };
-      const day = Math.floor(startDay - 1 + 0.25 * len); // ~1/4 into autumn, from the 2nd autumn onward
+      const day = Math.floor(startDay - 1 + 0.25 * len);
       return { text: `~day ${day}`, note: null };
     }
     if (season === 'spring') {
@@ -988,7 +1023,7 @@
     for (let i = 0; i < 4; i++) {
       const curLoc = locateDay(cursorDay, lengths, order);
       const daysUntil = curLoc.daysLeftInSeason;
-      const boundaryDay = cursorDay + daysUntil; // first day of next season
+      const boundaryDay = cursorDay + daysUntil;
       const nextS = nextSeasonAfter(curLoc.season, order);
       const li = document.createElement('li');
       const countText = daysUntil === 0 ? 'today' : (daysUntil === 1 ? 'tomorrow' : `in ${daysUntil} days (day ${boundaryDay})`);
@@ -1030,13 +1065,12 @@
     tbody.appendChild(frag);
   }
 
-  // Events
   dayInput.addEventListener('input', render);
   el('bumpDay').addEventListener('click', () => {
     dayInput.value = (parseInt(dayInput.value, 10) || 1) + 1;
     render();
   });
-  Object.values(lenInputs).forEach(inp => inp.addEventListener('input', render));
+  Object.values(lenInputs).forEach(inp => inp.addEventListener('change', render));
   startSeasonSel.addEventListener('change', render);
   yearsInput.addEventListener('input', render);
   moonCyclesInput.addEventListener('input', render);
@@ -1062,7 +1096,7 @@
   });
 
   el('resetDefaults').addEventListener('click', () => {
-    SEASON_ORDER.forEach(s => { lenInputs[s].value = DEFAULT_LENGTHS[s]; });
+    SEASON_ORDER.forEach(s => { lenInputs[s].value = 'default'; });
     startSeasonSel.value = 'autumn';
     render();
   });
