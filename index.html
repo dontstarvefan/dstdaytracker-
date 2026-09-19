@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Constant Almanac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0c0a06;
+    --bg-mid: #1e1811;
+    --paper: #ddc99a;
+    --paper-shadow: #c7ae7c;
+    --ink: #241c10;
+    --ink-soft: #5c4d34;
+    --line: #241c10;
+    --accent: #a23c1f;
+    --accent-soft: #7a2c16;
+    --autumn: #a85a26;
+    --winter: #2f6d80;
+    --spring: #566f38;
+    --summer: #9c7415;
+    --moon: #4a4570;
+    --moon-dim: #cfc6e8;
+    --card-shadow: rgba(0, 0, 0, 0.55);
+  }
+
+  :root[data-theme="light"] {
+    --bg-deep: #cdbb8d;
+    --bg-mid: #e2d3ac;
+    --paper: #f2e8cd;
+    --paper-shadow: #e0d0a6;
+    --ink: #241c10;
+    --ink-soft: #5c4d34;
+    --line: #241c10;
+    --accent: #8a3018;
+    --accent-soft: #6b2411;
+    --autumn: #a85a26;
+    --winter: #2f6d80;
+    --spring: #566f38;
+    --summer: #9c7415;
+    --moon: #4a4570;
+    --moon-dim: #cfc6e8;
+    --card-shadow: rgba(60, 45, 20, 0.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: radial-gradient(ellipse at 50% 0%, var(--bg-mid) 0%, var(--bg-deep) 70%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: 'Crimson Text', Georgia, serif;
+    margin: 0;
+    padding: 0 0 3rem;
+    min-height: 100vh;
+    transition: background 0.3s, color 0.2s;
+    position: relative;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+    z-index: 0;
+  }
+
+  .notch {
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  }
+  .notch-sm {
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  }
+
+  .topbar {
+    position: relative;
+    z-index: 1;
+    background: var(--bg-deep);
+    border-bottom: 4px solid var(--accent);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  }
+
+  .topbar-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .topbar-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: clamp(1.3rem, 5.5vw, 1.7rem);
+    color: var(--paper);
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  }
+
+  .theme-toggle {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    padding: 0.35rem 0.85rem;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { background: var(--paper-shadow); }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 0;
+  }
+
+  .sub-intro {
+    text-align: center;
+    color: var(--paper);
+    opacity: 0.75;
+    font-style: italic;
+    font-size: 0.95rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .card {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    margin-bottom: 1.4rem;
+    box-shadow: 4px 5px 0 var(--paper-shadow), 7px 9px 16px var(--card-shadow);
+  }
+
+  .card-head {
+    padding: 0.7rem 1.15rem 0.6rem;
+    border-bottom: 3px solid var(--ink);
+    background: var(--paper-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .card-head h2 {
+    font-family: 'Permanent Marker', cursive;
+    font-weight: 400;
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  .card-body { padding: 1.15rem 1.25rem 1.4rem; }
+
+  label {
+    display: block;
+    font-size: 0.87rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+
+  input[type="number"], select {
+    font-family: 'Crimson Text', serif;
+    font-size: 1.05rem;
+    background: #f4ecd6;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    padding: 0.5rem 0.6rem;
+    width: 100%;
+  }
+  input[type="number"]:focus, select:focus, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .day-input-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+  }
+  .day-input-row > div:first-child { flex: 1; }
+  .day-input-row input { font-size: 1.5rem; text-align: center; padding: 0.5rem; font-weight: 600; }
+
+  .today-btn {
+    background: var(--accent);
+    border: 2px solid var(--ink);
+    color: #f4ecd6;
+    padding: 0.65rem 0.9rem;
+    font-family: 'Crimson Text', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .today-btn:hover { background: var(--accent-soft); }
+
+  .readout {
+    margin-top: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .season-badge {
+    width: 4.3rem;
+    height: 4.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem;
+    flex-shrink: 0;
+    border: 3px solid var(--ink);
+    background: #f4ecd6;
+    box-shadow: 2px 3px 0 var(--paper-shadow);
+  }
+
+  .readout-text .season-name {
+    font-family: 'Permanent Marker', cursive;
+    font-weight: 400;
+    font-size: 1.55rem;
+    margin: 0;
+    text-transform: capitalize;
+    color: var(--accent);
+  }
+  .readout-text p {
+    margin: 0.2rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.94rem;
+  }
+
+  .cycle-bar-wrap { margin-top: 1.5rem; }
+  .cycle-bar {
+    display: flex;
+    height: 1.7rem;
+    overflow: hidden;
+    border: 2px solid var(--ink);
+    position: relative;
+  }
+  .cycle-seg { height: 100%; position: relative; }
+  .cycle-marker {
+    position: absolute;
+    top: -0.6rem;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid var(--ink);
+    transform: translateX(-50%);
+  }
+  .cycle-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+  }
+  .legend span { display: flex; align-items: center; gap: 0.35rem; color: var(--ink-soft); }
+  .swatch { width: 0.75rem; height: 0.75rem; border: 1.5px solid var(--ink); display: inline-block; }
+
+  .moon-readout {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-bottom: 1.3rem;
+  }
+  .moon-icon-badge {
+    width: 3.7rem;
+    height: 3.7rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    flex-shrink: 0;
+    border: 3px solid var(--ink);
+    background: #f4ecd6;
+    box-shadow: 2px 3px 0 var(--paper-shadow);
+  }
+  .moon-readout-text p { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 0.92rem; }
+  .moon-readout-text .season-name {
+    font-family: 'Permanent Marker', cursive;
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin: 0;
+    color: var(--accent);
+  }
+
+  .moon-bar {
+    display: flex;
+    height: 1.7rem;
+    overflow: hidden;
+    border: 2px solid var(--ink);
+    position: relative;
+  }
+  .moon-seg {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    background: var(--paper-shadow);
+    border-right: 1.5px solid var(--ink);
+  }
+  .moon-seg:last-child { border-right: none; }
+  .moon-seg.current { background: var(--accent); }
+
+  .giant-list { list-style: none; margin: 0; padding: 0; }
+  .giant-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-bottom: 2px dashed var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .giant-list li:last-child { border-bottom: none; }
+  .giant-list .g-season { display: flex; align-items: center; gap: 0.55rem; }
+  .giant-list .g-swatch { width: 0.75rem; height: 0.75rem; border: 1.5px solid var(--ink); flex-shrink: 0; }
+  .giant-list .g-name { color: var(--ink-soft); font-size: 0.87rem; }
+  .giant-list li.is-current { font-weight: 700; }
+  .giant-list li.is-current .g-name { color: var(--accent); }
+  .giant-note {
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    font-style: italic;
+    margin: 0.9rem 0 0;
+  }
+
+  .settings-toggle, .panel-toggle {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .settings-toggle:hover, .panel-toggle:hover { background: var(--accent); color: #f4ecd6; border-color: var(--ink); }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  .settings-grid .full { grid-column: 1 / -1; }
+
+  .season-label {
+    font-size: 0.87rem;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+  }
+
+  .reset-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
+  .reset-row button {
+    background: none;
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    padding: 0.4rem 0.75rem;
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .reset-row button:hover { background: var(--paper-shadow); }
+
+  .upcoming-list { list-style: none; margin: 0; padding: 0; }
+  .upcoming-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 2px dashed var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .upcoming-list li:last-child { border-bottom: none; }
+  .upcoming-list .u-season { display: flex; align-items: center; gap: 0.5rem; text-transform: capitalize; }
+  .upcoming-list .u-count { color: var(--ink-soft); font-size: 0.87rem; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+  .chip {
+    border: 2px solid var(--ink);
+    background: var(--paper-shadow);
+    color: var(--ink);
+    padding: 0.35rem 0.85rem;
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    font-size: 0.87rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .chip.active { color: #f4ecd6; border-color: var(--ink); }
+  .chip[data-season="all"].active { background: var(--ink-soft); }
+  .chip[data-season="autumn"].active { background: var(--autumn); }
+  .chip[data-season="winter"].active { background: var(--winter); }
+  .chip[data-season="spring"].active { background: var(--spring); }
+  .chip[data-season="summer"].active { background: var(--summer); }
+  .chip[data-phase].active { background: var(--moon); }
+
+  .years-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    font-size: 0.87rem;
+    color: var(--ink-soft);
+  }
+  .years-row input { width: 4.6rem; }
+
+  .log-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .log-table th {
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 0.8rem;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper-shadow);
+  }
+  .log-table td { padding: 0.45rem 0.5rem; border-bottom: 1.5px dashed var(--ink-soft); }
+  .log-table tr.current-row td { font-weight: 700; color: var(--accent); }
+  .log-table .dot { width: 0.65rem; height: 0.65rem; border: 1.5px solid var(--ink); display: inline-block; margin-right: 0.45rem; }
+  .log-table tbody tr:last-child td { border-bottom: none; }
+
+  .log-scroll { max-height: 22rem; overflow-y: auto; border: 2px solid var(--ink); }
+  .log-scroll table { margin: 0; }
+  .log-scroll thead th { position: sticky; top: 0; }
+
+  a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+  a:hover { color: var(--accent-soft); }
+
+  .giant-icon {
+    display: inline-flex;
+    vertical-align: middle;
+    color: inherit;
+    width: 1.1em;
+    height: 1.1em;
+  }
+  .giant-icon svg { width: 100%; height: 100%; }
+
+  footer {
+    text-align: center;
+    color: var(--paper);
+    opacity: 0.7;
+    font-size: 0.8rem;
+    margin-top: 1.5rem;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 420px) {
+    .settings-grid { grid-template-columns: 1fr 1fr; }
+    .readout { gap: 0.8rem; }
+    .season-badge { width: 3.5rem; height: 3.5rem; font-size: 1.5rem; }
+    .card-head h2 { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="topbar-title">The Constant Almanac</span>
+    <button class="theme-toggle notch-sm" id="themeToggle" type="button">Toggle theme</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="sub-intro">Keeping track of the days, so you don't have to guess</p>
+
+  <div class="card notch">
+    <div class="card-body">
+      <div class="day-input-row">
+        <div>
+          <label for="dayInput">Current day</label>
+          <input type="number" id="dayInput" min="1" value="1" inputmode="numeric">
+        </div>
+        <button class="today-btn notch-sm" id="bumpDay" type="button">+1 day</button>
+      </div>
+
+      <div class="readout" id="readout">
+        <div class="season-badge" id="seasonBadge">🍂</div>
+        <div class="readout-text">
+          <p class="season-name" id="seasonName">Autumn</p>
+          <p id="seasonDetail">Day 1 of this season</p>
+          <p id="seasonRemaining">19 days left before winter</p>
+        </div>
+      </div>
+
+      <div class="cycle-bar-wrap">
+        <div class="cycle-bar" id="cycleBar"></div>
+        <div class="cycle-labels">
+          <span>Start of year</span>
+          <span>End of year</span>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch">
+    <div class="card-head"><h2>Moon cycle</h2></div>
+    <div class="card-body">
+      <div class="moon-readout">
+        <div class="moon-icon-badge" id="moonBadge">🌑</div>
+        <div class="moon-readout-text">
+          <p class="season-name" id="moonPhaseName">New Moon</p>
+          <p id="moonNextFull">Full moon in 10 days</p>
+          <p id="moonNextNew">New moon in 20 days</p>
+        </div>
+      </div>
+      <div class="moon-bar" id="moonBar"></div>
+    </div>
+  </div>
+
+  <div class="card notch">
+    <div class="card-head">
+      <h2>Moon nights log</h2>
+      <button class="panel-toggle notch-sm" id="moonLogToggle" type="button">Hide</button>
+    </div>
+    <div class="card-body" id="moonLogPanel">
+      <div class="years-row">
+        <label for="moonCyclesInput" style="margin:0;">Moon cycles to list</label>
+        <input type="number" id="moonCyclesInput" min="1" max="400" value="20">
+      </div>
+      <div class="filters" id="moonFilters">
+        <button class="chip notch-sm active" data-phase="all" type="button">All</button>
+        <button class="chip notch-sm" data-phase="0" type="button">🌑 New</button>
+        <button class="chip notch-sm" data-phase="4" type="button">🌕 Full</button>
+        <button class="chip notch-sm" data-phase="2" type="button">🌓 1st qtr</button>
+        <button class="chip notch-sm" data-phase="6" type="button">🌗 Last qtr</button>
+      </div>
+      <div class="log-scroll">
+        <table class="log-table">
+          <thead>
+            <tr><th>Cycle</th><th>Phase</th><th>Night</th></tr>
+          </thead>
+          <tbody id="moonLogBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch">
+    <div class="card-head">
+      <h2>World settings</h2>
+      <button class="panel-toggle notch-sm" id="settingsToggle" type="button">Show</button>
+    </div>
+    <div class="card-body" id="settingsPanel" style="display:none;">
+      <div class="settings-grid">
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--autumn)"></span>Autumn (days)</div>
+          <input type="number" id="len-autumn" min="0" value="20">
+        </div>
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--winter)"></span>Winter (days)</div>
+          <input type="number" id="len-winter" min="0" value="15">
+        </div>
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--spring)"></span>Spring (days)</div>
+          <input type="number" id="len-spring" min="0" value="20">
+        </div>
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--summer)"></span>Summer (days)</div>
+          <input type="number" id="len-summer" min="0" value="15">
+        </div>
+        <div class="full">
+          <label for="startSeason">World starts in</label>
+          <select id="startSeason">
+            <option value="autumn">Autumn</option>
+            <option value="winter">Winter</option>
+            <option value="spring">Spring</option>
+            <option value="summer">Summer</option>
+          </select>
+        </div>
+        <div class="full reset-row">
+          <button class="notch-sm" id="resetDefaults" type="button">Reset to default lengths</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch">
+    <div class="card-head"><h2>What's coming up</h2></div>
+    <div class="card-body">
+      <ul class="upcoming-list" id="upcomingList"></ul>
+    </div>
+  </div>
+
+  <div class="card notch">
+    <div class="card-head">
+      <h2>Seasonal giants</h2>
+      <button class="panel-toggle notch-sm" id="giantsToggle" type="button">Hide</button>
+    </div>
+    <div class="card-body" id="giantsPanel">
+      <ul class="giant-list" id="giantList"></ul>
+      <p class="giant-note">Predicted days are estimates based on documented default-game timings, scaled to your season lengths — actual spawns can drift by a day or two. Bearger skips the world's very first autumn.</p>
+    </div>
+  </div>
+
+  <div class="card notch">
+    <div class="card-head"><h2>The full log</h2></div>
+    <div class="card-body">
+      <div class="years-row">
+        <label for="yearsInput" style="margin:0;">Years to list</label>
+        <input type="number" id="yearsInput" min="1" max="200" value="15">
+      </div>
+      <div class="filters" id="filters">
+        <button class="chip notch-sm active" data-season="all" type="button">All</button>
+        <button class="chip notch-sm" data-season="autumn" type="button">Autumn</button>
+        <button class="chip notch-sm" data-season="winter" type="button">Winter</button>
+        <button class="chip notch-sm" data-season="spring" type="button">Spring</button>
+        <button class="chip notch-sm" data-season="summer" type="button">Summer</button>
+      </div>
+      <div class="log-scroll">
+        <table class="log-table">
+          <thead>
+            <tr><th>Year</th><th>Season</th><th>Days</th><th>Giant</th></tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>Default lengths match a standard-settings DST world (70-day year). Adjust them above if your world uses custom season settings.</footer>
+</div>
+
+<script>
+(function () {
+  const SEASON_ICONS = { autumn: '🍂', winter: '❄️', spring: '🌱', summer: '☀️' };
+  const SEASON_ORDER = ['autumn', 'winter', 'spring', 'summer'];
+  const DEFAULT_LENGTHS = { autumn: 20, winter: 15, spring: 20, summer: 15 };
+
+  // Links to the current, actively-maintained Don't Starve wiki (the community
+  // wiki migrated from Fandom to wiki.gg in Sept 2023).
+  const SEASON_LINKS = {
+    autumn: 'https://dontstarve.wiki.gg/wiki/Autumn',
+    winter: 'https://dontstarve.wiki.gg/wiki/Winter',
+    spring: 'https://dontstarve.wiki.gg/wiki/Spring',
+    summer: 'https://dontstarve.wiki.gg/wiki/Summer'
+  };
+  const MOON_LINK = 'https://dontstarve.wiki.gg/wiki/Moon_Cycle';
+
+  const MOON_CYCLE = 20; // days
+  const MOON_PHASE_NAMES = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
+  const MOON_PHASE_ICONS = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
+  // Cumulative day-in-cycle boundaries for each phase (0-indexed), matching the
+  // wiki's day-11 first full moon: New(2d) Waxing Crescent(3d) 1stQtr(2d) Waxing
+  // Gibbous(3d) Full(2d) Waning Gibbous(3d) LastQtr(2d) Waning Crescent(3d).
+  const MOON_BOUNDS = [0, 2, 5, 7, 10, 12, 15, 17, 20];
+
+  function moonPhaseIndexFromDayIndex(dayIndex) {
+    for (let p = 0; p < 8; p++) {
+      if (dayIndex < MOON_BOUNDS[p + 1]) return p;
+    }
+    return 7;
+  }
+
+  const GIANTS = {
+    autumn: { name: 'Bearger', icon: '🐻', link: 'https://dontstarve.wiki.gg/wiki/Bearger' },
+    winter: { name: 'Deerclops', icon: '👁️', link: 'https://dontstarve.wiki.gg/wiki/Deerclops' },
+    spring: { name: 'Moose/Goose', icon: '🦢', link: 'https://dontstarve.wiki.gg/wiki/Moose/Goose' },
+    summer: { name: 'Antlion', icon: '🐜', link: 'https://dontstarve.wiki.gg/wiki/Antlion' }
+  };
+
+
+  const el = (id) => document.getElementById(id);
+  const dayInput = el('dayInput');
+  const settingsToggle = el('settingsToggle');
+  const settingsPanel = el('settingsPanel');
+  const startSeasonSel = el('startSeason');
+  const yearsInput = el('yearsInput');
+  const moonCyclesInput = el('moonCyclesInput');
+  const themeToggle = el('themeToggle');
+
+  const lenInputs = {
+    autumn: el('len-autumn'),
+    winter: el('len-winter'),
+    spring: el('len-spring'),
+    summer: el('len-summer')
+  };
+
+  let activeFilter = 'all';
+  let activeMoonFilter = 'all';
+
+  function safeGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function safeSet(key, val) {
+    try { localStorage.setItem(key, val); } catch (e) { /* ignore */ }
+  }
+
+  function loadState() {
+    const savedDay = safeGet('dst_day');
+    const savedLens = safeGet('dst_lengths');
+    const savedStart = safeGet('dst_start');
+    const savedYears = safeGet('dst_years');
+    const savedMoonCycles = safeGet('dst_moon_cycles');
+    const savedTheme = safeGet('dst_theme');
+
+    if (savedDay) dayInput.value = savedDay;
+    if (savedLens) {
+      try {
+        const parsed = JSON.parse(savedLens);
+        SEASON_ORDER.forEach(s => { if (parsed[s] != null) lenInputs[s].value = parsed[s]; });
+      } catch (e) { /* ignore */ }
+    }
+    if (savedStart) startSeasonSel.value = savedStart;
+    if (savedYears) yearsInput.value = savedYears;
+    if (savedMoonCycles) moonCyclesInput.value = savedMoonCycles;
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+
+  function getLengths() {
+    const l = {};
+    SEASON_ORDER.forEach(s => {
+      const v = parseInt(lenInputs[s].value, 10);
+      l[s] = (isNaN(v) || v < 0) ? 0 : v;
+    });
+    return l;
+  }
+
+  function getOrderFromStart() {
+    const start = startSeasonSel.value;
+    const idx = SEASON_ORDER.indexOf(start);
+    return SEASON_ORDER.slice(idx).concat(SEASON_ORDER.slice(0, idx));
+  }
+
+  function getCycleLength(lengths) {
+    return SEASON_ORDER.reduce((sum, s) => sum + lengths[s], 0);
+  }
+
+  // Returns { season, dayOfSeason, daysLeftInSeason, cycleIndex, dayInCycle }
+  function locateDay(day, lengths, order) {
+    const cycleLen = getCycleLength(lengths);
+    if (cycleLen <= 0) return null;
+    const zeroDay = day - 1;
+    const cycleIndex = Math.floor(zeroDay / cycleLen);
+    let dayInCycle = zeroDay % cycleLen; // 0-indexed within cycle
+    let acc = 0;
+    for (const s of order) {
+      const len = lengths[s];
+      if (len <= 0) continue;
+      if (dayInCycle < acc + len) {
+        return {
+          season: s,
+          dayOfSeason: dayInCycle - acc + 1,
+          daysLeftInSeason: acc + len - dayInCycle,
+          cycleIndex,
+          dayInCycle
+        };
+      }
+      acc += len;
+    }
+    // fallback (all lengths zero or rounding) -> first non-zero season
+    return { season: order.find(s => lengths[s] > 0) || order[0], dayOfSeason: 1, daysLeftInSeason: 1, cycleIndex, dayInCycle };
+  }
+
+  function nextSeasonAfter(season, order) {
+    const idx = order.indexOf(season);
+    return order[(idx + 1) % order.length];
+  }
+
+  function render() {
+    const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+    const lengths = getLengths();
+    const order = getOrderFromStart();
+    const cycleLen = getCycleLength(lengths);
+
+    safeSet('dst_day', String(day));
+    safeSet('dst_lengths', JSON.stringify(lengths));
+    safeSet('dst_start', startSeasonSel.value);
+    safeSet('dst_years', yearsInput.value);
+    safeSet('dst_moon_cycles', moonCyclesInput.value);
+
+    if (cycleLen <= 0) {
+      el('seasonName').textContent = 'No seasons active';
+      el('seasonDetail').textContent = 'Give at least one season a length above 0.';
+      el('seasonRemaining').textContent = '';
+      el('cycleBar').innerHTML = '';
+      el('legend').innerHTML = '';
+      el('upcomingList').innerHTML = '';
+      el('logBody').innerHTML = '';
+      el('giantList').innerHTML = '';
+      return;
+    }
+
+    const loc = locateDay(day, lengths, order);
+    el('seasonBadge').textContent = SEASON_ICONS[loc.season];
+    el('seasonBadge').style.borderColor = `var(--${loc.season})`;
+    el('seasonName').innerHTML = `<a href="${SEASON_LINKS[loc.season]}" target="_blank" rel="noopener">${loc.season}</a>`;
+    el('seasonDetail').textContent = `Day ${loc.dayOfSeason} of this ${loc.season} (day ${day} overall, year ${loc.cycleIndex + 1})`;
+    const nextS = nextSeasonAfter(loc.season, order);
+    if (loc.daysLeftInSeason === 1) {
+      el('seasonRemaining').textContent = `${nextS[0].toUpperCase()+nextS.slice(1)} begins tomorrow`;
+    } else {
+      el('seasonRemaining').textContent = `${loc.daysLeftInSeason} days left before ${nextS}`;
+    }
+
+    // Cycle bar
+    const bar = el('cycleBar');
+    bar.innerHTML = '';
+    order.forEach(s => {
+      const len = lengths[s];
+      if (len <= 0) return;
+      const seg = document.createElement('div');
+      seg.className = 'cycle-seg';
+      seg.style.width = (len / cycleLen * 100) + '%';
+      seg.style.background = `var(--${s})`;
+      seg.title = `${s}: ${len} days`;
+      bar.appendChild(seg);
+    });
+    const marker = document.createElement('div');
+    marker.className = 'cycle-marker';
+    marker.style.left = (loc.dayInCycle / cycleLen * 100) + '%';
+    bar.appendChild(marker);
+
+    // Legend
+    const legend = el('legend');
+    legend.innerHTML = '';
+    order.forEach(s => {
+      if (lengths[s] <= 0) return;
+      const span = document.createElement('span');
+      span.innerHTML = `<span class="swatch" style="background:var(--${s})"></span><a href="${SEASON_LINKS[s]}" target="_blank" rel="noopener">${s}</a> (${lengths[s]}d)`;
+      legend.appendChild(span);
+    });
+
+    renderUpcoming(day, lengths, order);
+    renderLog(day, lengths, order);
+    renderMoon(day);
+    renderMoonLog(day);
+    renderGiants(day, lengths, order, loc);
+  }
+
+  function renderMoon(day) {
+    const dayIndex = (day - 1) % MOON_CYCLE; // 0-indexed within a 20-day moon cycle
+    const phaseIdx = moonPhaseIndexFromDayIndex(dayIndex);
+
+    el('moonBadge').textContent = MOON_PHASE_ICONS[phaseIdx];
+    el('moonPhaseName').innerHTML = `<a href="${MOON_LINK}" target="_blank" rel="noopener">${MOON_PHASE_NAMES[phaseIdx]}</a>`;
+
+    // Full moon lands on the day whose (day-1) % 20 === 10; new moon on (day-1) % 20 === 0
+    const daysToFull = (10 - dayIndex + MOON_CYCLE) % MOON_CYCLE;
+    const daysToNew = (0 - dayIndex + MOON_CYCLE) % MOON_CYCLE;
+
+    el('moonNextFull').textContent = daysToFull === 0
+      ? `Full moon tonight (day ${day})`
+      : `Full moon in ${daysToFull} day${daysToFull === 1 ? '' : 's'} (day ${day + daysToFull})`;
+    el('moonNextNew').textContent = daysToNew === 0
+      ? `New moon tonight (day ${day})`
+      : `New moon in ${daysToNew} day${daysToNew === 1 ? '' : 's'} (day ${day + daysToNew})`;
+
+    const bar = el('moonBar');
+    bar.innerHTML = '';
+    MOON_PHASE_ICONS.forEach((icon, i) => {
+      const seg = document.createElement('div');
+      seg.className = 'moon-seg' + (i === phaseIdx ? ' current' : '');
+      seg.textContent = icon;
+      seg.title = MOON_PHASE_NAMES[i];
+      bar.appendChild(seg);
+    });
+  }
+
+  // Predicted spawn window for a giant, given the absolute start day and length
+  // of the specific season occurrence it belongs to. Ratios are drawn from the
+  // Don't Starve Together wiki's documented default-settings spawn timings and
+  // scaled proportionally to whatever season length is configured.
+  function giantPrediction(season, startDay, len, cycleIndex) {
+    if (len <= 0) return null;
+    if (season === 'winter') {
+      const day = Math.floor(startDay - 1 + 0.72 * len); // ~day 30 by default (10.8 days into a 15-day winter)
+      return { text: `~day ${day}`, note: 'night of that day' };
+    }
+    if (season === 'autumn') {
+      if (cycleIndex === 0) return { text: 'not yet', note: "skips the world's first autumn" };
+      const day = Math.floor(startDay - 1 + 0.25 * len); // ~1/4 into autumn, from the 2nd autumn onward
+      return { text: `~day ${day}`, note: null };
+    }
+    if (season === 'spring') {
+      const dayLow = Math.floor(startDay - 1 + (2 / 20) * len);
+      const dayHigh = Math.floor(startDay - 1 + (4 / 20) * len);
+      return { text: `day ${dayLow}\u2013${dayHigh}`, note: null };
+    }
+    if (season === 'summer') {
+      return { text: `~day ${startDay}`, note: 'first dry day, weather-dependent' };
+    }
+    return null;
+  }
+
+  function findOccurrence(lengths, order, cycleIndex, targetSeason) {
+    const cycleLen = getCycleLength(lengths);
+    const base = cycleIndex * cycleLen;
+    let offset = 0;
+    for (const s of order) {
+      const len = lengths[s];
+      if (len <= 0) continue;
+      if (s === targetSeason) return { startDay: base + offset + 1, len, cycleIndex };
+      offset += len;
+    }
+    return null;
+  }
+
+  function nextOrCurrentOccurrence(day, lengths, order, targetSeason, currentLoc) {
+    const cur = findOccurrence(lengths, order, currentLoc.cycleIndex, targetSeason);
+    if (!cur) return null;
+    const endDay = cur.startDay + cur.len - 1;
+    if (endDay >= day) return cur;
+    return findOccurrence(lengths, order, currentLoc.cycleIndex + 1, targetSeason);
+  }
+
+  function renderGiants(day, lengths, order, currentLoc) {
+    const list = el('giantList');
+    list.innerHTML = '';
+    order.forEach(s => {
+      if (lengths[s] <= 0) return;
+      const g = GIANTS[s];
+      const occ = nextOrCurrentOccurrence(day, lengths, order, s, currentLoc);
+      const pred = occ ? giantPrediction(s, occ.startDay, occ.len, occ.cycleIndex) : null;
+      const li = document.createElement('li');
+      if (s === currentLoc.season) li.className = 'is-current';
+      const predText = pred ? pred.text : '';
+      li.innerHTML = `<span class="g-season"><span class="g-swatch" style="background:var(--${s})"></span><a href="${SEASON_LINKS[s]}" target="_blank" rel="noopener">${s.charAt(0).toUpperCase() + s.slice(1)}</a></span><span class="g-name"><span class="giant-icon">${g.icon}</span> <a href="${g.link}" target="_blank" rel="noopener">${g.name}</a> — ${predText}</span>`;
+      list.appendChild(li);
+    });
+  }
+
+  function renderMoonLog(currentDay) {
+    const cycles = Math.min(400, Math.max(1, parseInt(moonCyclesInput.value, 10) || 20));
+    const tbody = el('moonLogBody');
+    tbody.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    const currentDayIndex = (currentDay - 1) % MOON_CYCLE;
+    const currentCycleIndex = Math.floor((currentDay - 1) / MOON_CYCLE);
+    const currentPhaseIdx = moonPhaseIndexFromDayIndex(currentDayIndex);
+
+    for (let c = 0; c < cycles; c++) {
+      const base = c * MOON_CYCLE;
+      for (let p = 0; p < 8; p++) {
+        if (activeMoonFilter !== 'all' && parseInt(activeMoonFilter, 10) !== p) continue;
+        const startDay = base + MOON_BOUNDS[p] + 1;
+        const tr = document.createElement('tr');
+        const isCurrent = (c === currentCycleIndex && p === currentPhaseIdx);
+        if (isCurrent) tr.className = 'current-row';
+        tr.innerHTML = `<td>${c + 1}</td><td>${MOON_PHASE_ICONS[p]} <a href="${MOON_LINK}" target="_blank" rel="noopener">${MOON_PHASE_NAMES[p]}</a></td><td>${startDay}</td>`;
+        frag.appendChild(tr);
+      }
+    }
+    tbody.appendChild(frag);
+  }
+
+  function renderUpcoming(day, lengths, order) {
+    const list = el('upcomingList');
+    list.innerHTML = '';
+    let cursorDay = day;
+    for (let i = 0; i < 4; i++) {
+      const curLoc = locateDay(cursorDay, lengths, order);
+      const daysUntil = curLoc.daysLeftInSeason;
+      const boundaryDay = cursorDay + daysUntil; // first day of next season
+      const nextS = nextSeasonAfter(curLoc.season, order);
+      const li = document.createElement('li');
+      const countText = daysUntil === 0 ? 'today' : (daysUntil === 1 ? 'tomorrow' : `in ${daysUntil} days (day ${boundaryDay})`);
+      li.innerHTML = `<span class="u-season"><span class="swatch" style="background:var(--${nextS})"></span><a href="${SEASON_LINKS[nextS]}" target="_blank" rel="noopener">${nextS}</a> begins</span><span class="u-count">${countText}</span>`;
+      list.appendChild(li);
+      cursorDay = boundaryDay;
+    }
+  }
+
+  function renderLog(currentDay, lengths, order) {
+    const years = Math.min(200, Math.max(1, parseInt(yearsInput.value, 10) || 15));
+    const cycleLen = getCycleLength(lengths);
+    const tbody = el('logBody');
+    tbody.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    const currentLoc = locateDay(currentDay, lengths, order);
+
+    for (let y = 0; y < years; y++) {
+      const base = y * cycleLen;
+      let offset = 0;
+      order.forEach(s => {
+        const len = lengths[s];
+        if (len <= 0) return;
+        const startDay = base + offset + 1;
+        const endDay = base + offset + len;
+        offset += len;
+
+        if (activeFilter !== 'all' && activeFilter !== s) return;
+
+        const tr = document.createElement('tr');
+        const isCurrent = (y === currentLoc.cycleIndex && s === currentLoc.season);
+        if (isCurrent) tr.className = 'current-row';
+        const pred = giantPrediction(s, startDay, len, y);
+        const giantCell = pred ? `<a href="${GIANTS[s].link}" target="_blank" rel="noopener"><span class="giant-icon">${GIANTS[s].icon}</span> ${pred.text}</a>` : '\u2014';
+        tr.innerHTML = `<td>${y + 1}</td><td><span class="dot" style="background:var(--${s})"></span><a href="${SEASON_LINKS[s]}" target="_blank" rel="noopener">${s.charAt(0).toUpperCase() + s.slice(1)}</a></td><td>${startDay}\u2013${endDay}</td><td>${giantCell}</td>`;
+        frag.appendChild(tr);
+      });
+    }
+    tbody.appendChild(frag);
+  }
+
+  // Events
+  dayInput.addEventListener('input', render);
+  el('bumpDay').addEventListener('click', () => {
+    dayInput.value = (parseInt(dayInput.value, 10) || 1) + 1;
+    render();
+  });
+  Object.values(lenInputs).forEach(inp => inp.addEventListener('input', render));
+  startSeasonSel.addEventListener('change', render);
+  yearsInput.addEventListener('input', render);
+  moonCyclesInput.addEventListener('input', render);
+
+  settingsToggle.addEventListener('click', () => {
+    const isHidden = settingsPanel.style.display === 'none';
+    settingsPanel.style.display = isHidden ? '' : 'none';
+    settingsToggle.textContent = isHidden ? 'Hide' : 'Show';
+  });
+
+  el('moonLogToggle').addEventListener('click', () => {
+    const panel = el('moonLogPanel');
+    const isHidden = panel.style.display === 'none';
+    panel.style.display = isHidden ? '' : 'none';
+    el('moonLogToggle').textContent = isHidden ? 'Hide' : 'Show';
+  });
+
+  el('giantsToggle').addEventListener('click', () => {
+    const panel = el('giantsPanel');
+    const isHidden = panel.style.display === 'none';
+    panel.style.display = isHidden ? '' : 'none';
+    el('giantsToggle').textContent = isHidden ? 'Hide' : 'Show';
+  });
+
+  el('resetDefaults').addEventListener('click', () => {
+    SEASON_ORDER.forEach(s => { lenInputs[s].value = DEFAULT_LENGTHS[s]; });
+    startSeasonSel.value = 'autumn';
+    render();
+  });
+
+  document.querySelectorAll('#filters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#filters .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.getAttribute('data-season');
+      const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+      renderLog(day, getLengths(), getOrderFromStart());
+    });
+  });
+
+  document.querySelectorAll('#moonFilters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#moonFilters .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeMoonFilter = chip.getAttribute('data-phase');
+      const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+      renderMoonLog(day);
+    });
+  });
+
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'light' ? null : 'light';
+    if (next) {
+      document.documentElement.setAttribute('data-theme', next);
+      safeSet('dst_theme', next);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      safeSet('dst_theme', '');
+    }
+  });
+
+  loadState();
+  render();
+})();
+</script>
+</body>
+</html>
