@@ -56,6 +56,7 @@
 
   * { box-sizing: border-box; }
 
+  html { font-size: 19px; }
   html, body { height: 100%; }
 
   body {
@@ -107,7 +108,7 @@
 
   .topbar-title {
     font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
-    font-size: clamp(1.3rem, 5.5vw, 1.7rem);
+    font-size: clamp(1.6rem, 6.5vw, 2.1rem);
     color: var(--paper);
     letter-spacing: 0.01em;
     line-height: 1.15;
@@ -163,7 +164,7 @@
   .card-head h2 {
     font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
     font-weight: 400;
-    font-size: 1.15rem;
+    font-size: 1.45rem;
     letter-spacing: 0.01em;
     color: var(--accent);
     margin: 0;
@@ -239,7 +240,7 @@
   .readout-text .season-name {
     font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
     font-weight: 400;
-    font-size: 1.55rem;
+    font-size: 1.9rem;
     margin: 0;
     text-transform: capitalize;
     color: var(--accent);
@@ -310,7 +311,7 @@
   .moon-readout-text .season-name {
     font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
     font-weight: 400;
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     margin: 0;
     color: var(--accent);
   }
@@ -331,9 +332,12 @@
     font-size: 0.8rem;
     background: var(--paper-shadow);
     border-right: 1.5px solid var(--ink);
+    cursor: pointer;
   }
   .moon-seg:last-child { border-right: none; }
+  .moon-seg:hover { background: var(--moon-dim); }
   .moon-seg.current { background: var(--accent); }
+  .moon-seg.selected { outline: 2px solid var(--accent); outline-offset: -2px; }
 
   .giant-list { list-style: none; margin: 0; padding: 0; }
   .giant-list li {
@@ -491,7 +495,7 @@
     .settings-grid { grid-template-columns: 1fr 1fr; }
     .readout { gap: 0.8rem; }
     .season-badge { width: 3.5rem; height: 3.5rem; font-size: 1.5rem; }
-    .card-head h2 { font-size: 1rem; }
+    .card-head h2 { font-size: 1.25rem; }
   }
 </style>
 </head>
@@ -531,6 +535,7 @@
         <div class="cycle-bar" id="cycleBar"></div>
         <div class="cycle-labels">
           <span>Start of year</span>
+          <span id="yearLengthTop">70-day year</span>
           <span>End of year</span>
         </div>
         <div class="legend" id="legend"></div>
@@ -550,6 +555,7 @@
         </div>
       </div>
       <div class="moon-bar" id="moonBar"></div>
+      <p class="giant-note" id="moonClickInfo" style="margin-top:0.6rem;">Tap a phase above to see when it's next due.</p>
     </div>
   </div>
 
@@ -637,6 +643,9 @@
             <option value="summer">Summer</option>
           </select>
         </div>
+        <div class="full" id="yearLengthSettingsWrap">
+          <p class="giant-note" id="yearLengthSettings" style="margin:0.4rem 0 0;">Current year length: 70 days</p>
+        </div>
         <div class="full reset-row">
           <button class="notch-sm" id="resetDefaults" type="button">Reset to default lengths</button>
         </div>
@@ -696,8 +705,6 @@
   const SEASON_ORDER = ['autumn', 'winter', 'spring', 'summer'];
   const DEFAULT_LENGTHS = { autumn: 20, winter: 15, spring: 20, summer: 15 };
 
-  // Day counts behind each named preset, matching DST's own world customization
-  // menu (Autumn/Spring default to 20-day years, Winter/Summer to 15-day years).
   const SEASON_PRESETS = {
     autumn: { veryshort: 5, short: 12, default: 20, long: 30, verylong: 50 },
     winter: { veryshort: 5, short: 10, default: 15, long: 22, verylong: 40 },
@@ -705,8 +712,6 @@
     summer: { veryshort: 5, short: 10, default: 15, long: 22, verylong: 40 }
   };
 
-  // Links to the current, actively-maintained Don't Starve wiki (the community
-  // wiki migrated from Fandom to wiki.gg in Sept 2023).
   const SEASON_LINKS = {
     autumn: 'https://dontstarve.wiki.gg/wiki/Autumn',
     winter: 'https://dontstarve.wiki.gg/wiki/Winter',
@@ -715,7 +720,7 @@
   };
   const MOON_LINK = 'https://dontstarve.wiki.gg/wiki/Moon_Cycle';
 
-  const MOON_CYCLE = 20; // days
+  const MOON_CYCLE = 20;
   const MOON_PHASE_NAMES = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
   const MOON_PHASE_ICONS = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
   const MOON_BOUNDS = [0, 2, 5, 7, 10, 12, 15, 17, 20];
@@ -848,6 +853,9 @@
     safeSet('dst_years', yearsInput.value);
     safeSet('dst_moon_cycles', moonCyclesInput.value);
 
+    el('yearLengthTop').textContent = `${cycleLen}-day year`;
+    el('yearLengthSettings').textContent = `Current year length: ${cycleLen} days`;
+
     if (cycleLen <= 0) {
       el('seasonName').textContent = 'No seasons active';
       el('seasonDetail').textContent = 'Give at least one season a length above 0.';
@@ -929,6 +937,16 @@
       seg.className = 'moon-seg' + (i === phaseIdx ? ' current' : '');
       seg.textContent = icon;
       seg.title = MOON_PHASE_NAMES[i];
+      seg.addEventListener('click', () => {
+        document.querySelectorAll('#moonBar .moon-seg').forEach(s => s.classList.remove('selected'));
+        seg.classList.add('selected');
+        const daysUntil = (MOON_BOUNDS[i] - dayIndex + MOON_CYCLE) % MOON_CYCLE;
+        const targetDay = day + daysUntil;
+        const text = daysUntil === 0
+          ? `${MOON_PHASE_NAMES[i]} is tonight (day ${day})`
+          : `${MOON_PHASE_NAMES[i]} in ${daysUntil} day${daysUntil === 1 ? '' : 's'} (day ${targetDay})`;
+        el('moonClickInfo').textContent = text;
+      });
       bar.appendChild(seg);
     });
   }
