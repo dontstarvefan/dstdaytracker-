@@ -79,6 +79,19 @@
     background-size: 3px 3px;
     z-index: 0;
   }
+  /* Original hand-drawn pine + firefly motif, tiled faintly into the wide-screen
+     margins outside the content column so desktop doesn't feel like empty void. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+    background-repeat: repeat;
+    background-size: 180px 220px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='220' viewBox='0 0 180 220'%3E%3Cg fill='none' stroke='%23ddc99a' stroke-width='1.4' opacity='0.5'%3E%3Cpath d='M30 150 L30 110 M18 130 L30 110 L42 130 M14 145 L30 122 L46 145 M10 160 L30 133 L50 160'/%3E%3Ccircle cx='140' cy='60' r='2' fill='%23ddc99a' stroke='none'/%3E%3Ccircle cx='155' cy='90' r='1.5' fill='%23ddc99a' stroke='none'/%3E%3Ccircle cx='125' cy='95' r='1.2' fill='%23ddc99a' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  }
 
   .notch {
     clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
@@ -96,7 +109,7 @@
   }
 
   .topbar-inner {
-    max-width: 760px;
+    max-width: 1080px;
     margin: 0 auto;
     padding: 1rem 1.25rem;
     display: flex;
@@ -105,6 +118,13 @@
     gap: 0.75rem;
     flex-wrap: wrap;
   }
+
+  .topbar-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .topbar-logo svg { width: 2.1rem; height: 2.1rem; flex-shrink: 0; }
 
   .topbar-title {
     font-family: 'Belisa Plumilla Manual', 'Caveat', cursive;
@@ -131,9 +151,21 @@
   .wrap {
     position: relative;
     z-index: 1;
-    max-width: 760px;
+    max-width: 1080px;
     margin: 0 auto;
     padding: 1.5rem 1.25rem 0;
+  }
+
+  @media (min-width: 860px) {
+    .wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 1.75rem;
+      align-content: start;
+    }
+    .sub-intro, footer, .treeline { grid-column: 1 / -1; }
+    /* Keep the day tracker hero full-width and prominent; pair the rest into two columns */
+    .wrap > .card:nth-of-type(1) { grid-column: 1 / -1; }
   }
 
   .sub-intro {
@@ -480,6 +512,13 @@
   }
   .giant-icon svg { width: 100%; height: 100%; }
 
+  .treeline {
+    display: block;
+    width: 100%;
+    height: 2.5rem;
+    margin-top: 1.5rem;
+  }
+
   footer {
     text-align: center;
     color: var(--paper);
@@ -503,7 +542,14 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <span class="topbar-title">The Constant Almanac</span>
+    <span class="topbar-logo">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M27 5 A18 18 0 1 0 41 33 A14 14 0 1 1 27 5 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M17 44 C15 38 19 34 17 29 C22 33 24 27 22 22 C29 27 31 35 27 40 C28 36 26 34 24 33 C25 38 21 42 17 44 Z" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+        <rect x="8" y="43" width="26" height="3" rx="1" fill="var(--ink)"/>
+      </svg>
+      <span class="topbar-title">The Constant Almanac</span>
+    </span>
     <button class="theme-toggle notch-sm" id="themeToggle" type="button">Toggle theme</button>
   </div>
 </div>
@@ -695,6 +741,16 @@
       </div>
     </div>
   </div>
+
+  <svg class="treeline" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true">
+    <g fill="none" stroke="var(--paper)" stroke-width="1.6" opacity="0.55">
+      <path d="M20 60 L20 30 M10 46 L20 30 L30 46 M6 54 L20 34 L34 54"/>
+      <path d="M70 60 L70 22 M58 42 L70 22 L82 42 M54 52 L70 28 L86 52 M50 60 L70 36 L90 60"/>
+      <path d="M330 60 L330 26 M320 44 L330 26 L340 44 M316 54 L330 30 L344 54"/>
+      <path d="M380 60 L380 32 M372 48 L380 32 L388 48"/>
+      <circle cx="200" cy="14" r="7" fill="var(--paper)" stroke="none" opacity="0.5"/>
+    </g>
+  </svg>
 
   <footer>Default lengths match a standard-settings DST world (70-day year). Adjust them above if your world uses custom season settings.</footer>
 </div>
