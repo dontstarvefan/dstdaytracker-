@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DST Day & Season Tracker</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%230c0a06'/%3E%3Cpath d='M27 5 A18 18 0 1 0 41 33 A14 14 0 1 1 27 5 Z' fill='%23ddc99a' stroke='%23241c10' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M17 44 C15 38 19 34 17 29 C22 33 24 27 22 22 C29 27 31 35 27 40 C28 36 26 34 24 33 C25 38 21 42 17 44 Z' fill='%23a23c1f' stroke='%23241c10' stroke-width='1.4' stroke-linejoin='round'/%3E%3Crect x='8' y='43' width='26' height='3' rx='1' fill='%23241c10'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%230c0a06'/%3E%3Cpath d='M27 5 A18 18 0 1 0 41 33 A14 14 0 1 1 27 5 Z' fill='%23ddc99a' stroke='%23241c10' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M17 44 C15 38 19 34 17 29 C22 33 24 27 22 22 C29 27 31 35 27 40 C28 36 26 34 24 33 C25 38 21 42 17 44 Z' fill='%23a23c1f' stroke='%23241c10' stroke-width='1.4' stroke-linejoin='round'/%3E%3Crect x='6' y='43' width='28' height='3' rx='1' fill='%23241c10' transform='rotate(-10 20 44.5)'/%3E%3Crect x='10' y='43' width='28' height='3' rx='1' fill='%23241c10' transform='rotate(10 24 44.5)'/%3E%3C/svg%3E">
 <meta name="description" content="Free Don't Starve Together day tracker. Instantly see what season you're in, when winter/summer start and end, moon phase and full moon nights, and predicted spawn days for Deerclops, Bearger, Moose/Goose, and Antlion.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Stint+Ultra+Condensed&display=swap" rel="stylesheet">
@@ -55,7 +55,7 @@
     --card-shadow: rgba(60, 45, 20, 0.25);
   }
 
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html { font-size: 19px; }
   html, body { height: 100%; }
@@ -175,8 +175,8 @@
       gap: 0 1.75rem;
       align-content: start;
     }
-    .sub-intro, footer, .treeline { grid-column: 1 / -1; }
-    .wrap > .card:nth-of-type(1) { grid-column: 1 / -1; }
+    .sub-intro, footer, .treeline, .page-nav { grid-column: 1 / -1; }
+    .wrap > .card.card-full { grid-column: 1 / -1; }
   }
 
   .sub-intro {
@@ -187,6 +187,26 @@
     font-size: 0.95rem;
     margin: 0 0 1.5rem;
   }
+
+  .page-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .page-nav .chip {
+    font-size: 0.95rem;
+    padding: 0.55rem 1.1rem;
+  }
+  .page-nav .chip.active {
+    background: var(--accent);
+    color: #f4ecd6;
+    border-color: var(--ink);
+  }
+
+  .card[data-page] { display: none; }
+  .card[data-page].page-visible { display: block; }
 
   .card {
     background: var(--paper);
@@ -221,6 +241,16 @@
     color: var(--ink-soft);
     margin-bottom: 0.4rem;
     font-weight: 600;
+  }
+
+  input[type="range"] { accent-color: var(--accent); }
+
+  .step-btn {
+    touch-action: manipulation;
+    padding: 0.45rem 0.9rem;
+    font-size: 1rem;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   input[type="number"], select {
@@ -294,7 +324,7 @@
     font-size: 0.94rem;
   }
 
-  .cycle-bar-wrap { margin-top: 1.5rem; }
+  .cycle-bar-wrap { margin-top: 1.5rem; position: relative; }
   .cycle-bar {
     display: flex;
     height: 1.7rem;
@@ -305,13 +335,29 @@
   .cycle-seg { height: 100%; position: relative; }
   .cycle-marker {
     position: absolute;
-    top: -0.6rem;
-    width: 0;
-    height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 9px solid var(--ink);
+    top: -1.35rem;
     transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .cycle-marker .marker-label {
+    background: var(--accent);
+    color: #f4ecd6;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    white-space: nowrap;
+    border: 1.5px solid var(--ink);
+    box-shadow: 2px 2px 0 var(--paper-shadow);
+    margin-bottom: 0.15rem;
+  }
+  .cycle-marker .marker-line {
+    width: 2px;
+    height: 0.6rem;
+    background: var(--ink);
   }
   .cycle-labels {
     display: flex;
@@ -404,6 +450,15 @@
     margin: 0.9rem 0 0;
   }
 
+  .tip-list { list-style: none; margin: 0; padding: 0; }
+  .tip-list li {
+    padding: 0.6rem 0;
+    border-bottom: 2px dashed var(--ink-soft);
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .tip-list li:last-child { border-bottom: none; }
+
   .settings-toggle, .panel-toggle {
     background: var(--paper);
     border: 2px solid var(--ink);
@@ -481,6 +536,12 @@
   .chip[data-season="spring"].active { background: var(--spring); }
   .chip[data-season="summer"].active { background: var(--summer); }
   .chip[data-phase].active { background: var(--moon); }
+  #bossWindowToggle.active { background: var(--accent); }
+  .chip[data-chart-type].active { background: var(--accent); }
+  .chip[data-tip-season="autumn"].active { background: var(--autumn); }
+  .chip[data-tip-season="winter"].active { background: var(--winter); }
+  .chip[data-tip-season="spring"].active { background: var(--spring); }
+  .chip[data-tip-season="summer"].active { background: var(--summer); }
 
   .years-row {
     display: flex;
@@ -507,7 +568,11 @@
   .log-table .dot { width: 0.65rem; height: 0.65rem; border: 1.5px solid var(--ink); display: inline-block; margin-right: 0.45rem; }
   .log-table tbody tr:last-child td { border-bottom: none; }
 
-  .log-scroll { max-height: 22rem; overflow-y: auto; border: 2px solid var(--ink); }
+  .log-scroll {
+    max-height: 22rem;
+    overflow-y: auto;
+    border: 7px double var(--ink);
+  }
   .log-scroll table { margin: 0; }
   .log-scroll thead th { position: sticky; top: 0; }
 
@@ -528,6 +593,13 @@
     width: 100%;
     height: 2.5rem;
     margin-top: 1.5rem;
+    background-repeat: repeat-x;
+    background-position: bottom left;
+    background-size: 110px 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='60' viewBox='0 0 110 60'%3E%3Cg fill='none' stroke='%23ddc99a' stroke-width='1.6' opacity='0.55'%3E%3Cpath d='M20 60 L20 30 M10 46 L20 30 L30 46 M6 54 L20 34 L34 54'/%3E%3Cpath d='M70 60 L70 22 M58 42 L70 22 L82 42 M54 52 L70 28 L86 52 M50 60 L70 36 L90 60'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  :root[data-theme="light"] .treeline {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='60' viewBox='0 0 110 60'%3E%3Cg fill='none' stroke='%23241c10' stroke-width='1.6' opacity='0.45'%3E%3Cpath d='M20 60 L20 30 M10 46 L20 30 L30 46 M6 54 L20 34 L34 54'/%3E%3Cpath d='M70 60 L70 22 M58 42 L70 22 L82 42 M54 52 L70 28 L86 52 M50 60 L70 36 L90 60'/%3E%3C/g%3E%3C/svg%3E");
   }
 
   footer {
@@ -557,7 +629,8 @@
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <path d="M27 5 A18 18 0 1 0 41 33 A14 14 0 1 1 27 5 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/>
         <path d="M17 44 C15 38 19 34 17 29 C22 33 24 27 22 22 C29 27 31 35 27 40 C28 36 26 34 24 33 C25 38 21 42 17 44 Z" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
-        <rect x="8" y="43" width="26" height="3" rx="1" fill="var(--ink)"/>
+        <rect x="6" y="43" width="28" height="3" rx="1" fill="var(--ink)" transform="rotate(-10 20 44.5)"/>
+        <rect x="10" y="43" width="28" height="3" rx="1" fill="var(--ink)" transform="rotate(10 24 44.5)"/>
       </svg>
       <span class="topbar-title">DST Day <span class="amp-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><text x="20" y="31" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="36" fill="var(--accent)">&amp;</text></svg></span> Season Tracker</span>
     </span>
@@ -569,7 +642,7 @@
 
   <p class="sub-intro">Keeping track of the days, so you don't have to guess</p>
 
-  <div class="card notch">
+  <div class="card notch card-full">
     <div class="card-body">
       <div class="day-input-row">
         <div>
@@ -578,7 +651,17 @@
         </div>
         <button class="today-btn notch-sm" id="bumpDay" type="button">+1 day</button>
       </div>
+    </div>
+  </div>
 
+  <div class="page-nav" id="pageNav">
+    <button class="chip notch-sm active" data-page-tab="tracker" type="button">📅 Day Tracker</button>
+    <button class="chip notch-sm" data-page-tab="graphs" type="button">📊 Graphs</button>
+    <button class="chip notch-sm" data-page-tab="tips" type="button">💡 Tips</button>
+  </div>
+
+  <div class="card notch card-full page-visible" data-page="tracker">
+    <div class="card-body">
       <div class="readout" id="readout">
         <div class="season-badge" id="seasonBadge">🍂</div>
         <div class="readout-text">
@@ -588,7 +671,7 @@
         </div>
       </div>
 
-      <div class="cycle-bar-wrap">
+      <div class="cycle-bar-wrap" id="cycleBarWrap">
         <div class="cycle-bar" id="cycleBar"></div>
         <div class="cycle-labels">
           <span>Start of year</span>
@@ -600,7 +683,7 @@
     </div>
   </div>
 
-  <div class="card notch">
+  <div class="card notch page-visible" data-page="tracker">
     <div class="card-head"><h2>Moon cycle</h2></div>
     <div class="card-body">
       <div class="moon-readout">
@@ -616,7 +699,7 @@
     </div>
   </div>
 
-  <div class="card notch">
+  <div class="card notch page-visible" data-page="tracker">
     <div class="card-head">
       <h2>Moon nights log</h2>
       <button class="panel-toggle notch-sm" id="moonLogToggle" type="button">Hide</button>
@@ -644,7 +727,7 @@
     </div>
   </div>
 
-  <div class="card notch">
+  <div class="card notch page-visible" data-page="tracker">
     <div class="card-head">
       <h2>World settings</h2>
       <button class="panel-toggle notch-sm" id="settingsToggle" type="button">Show</button>
@@ -710,14 +793,71 @@
     </div>
   </div>
 
-  <div class="card notch">
+  <div class="card notch page-visible" data-page="tracker">
     <div class="card-head"><h2>What's coming up</h2></div>
     <div class="card-body">
       <ul class="upcoming-list" id="upcomingList"></ul>
     </div>
   </div>
 
-  <div class="card notch">
+  <div class="card notch" data-page="graphs">
+    <div class="card-head"><h2>Boss spawn chance chart</h2></div>
+    <div class="card-body">
+      <div class="filters" id="chartFilters">
+        <button class="chip notch-sm active" data-chart-type="bar" type="button">▬ Bar</button>
+        <button class="chip notch-sm" data-chart-type="line" type="button">📈 Line</button>
+        <button class="chip notch-sm" id="bossWindowToggle" type="button">🛡️ Show presence window</button>
+      </div>
+      <p class="giant-note" style="margin:0 0 0.7rem;">*Presence window shades the days a spawned giant will likely still exist in your world, from its estimated spawn point until its season ends.</p>
+      <div class="years-row" style="margin-bottom:0.3rem; justify-content:space-between;">
+        <span id="chartWindowLabel" style="font-style:italic;">Data spans years 1–3</span>
+        <button class="chip notch-sm" id="chartResetBtn" type="button">Reset</button>
+      </div>
+      <div style="margin-bottom:0.7rem;">
+        <label for="chartPreviewSlider" style="margin:0 0 0.35rem;">Preview <span id="chartPreviewDayLabel">day 1</span></label>
+        <div class="years-row" style="margin-bottom:0;">
+          <button class="chip notch-sm step-btn" id="previewPrevBtn" type="button" aria-label="Previous day">◀</button>
+          <input type="range" id="chartPreviewSlider" min="0" max="210" value="0" style="flex:1; width:auto;">
+          <button class="chip notch-sm step-btn" id="previewNextBtn" type="button" aria-label="Next day">▶</button>
+        </div>
+      </div>
+      <svg id="seasonChart" viewBox="0 0 300 190" style="width:100%; height:auto; display:block; min-height:240px; touch-action:pan-y; cursor:pointer;"></svg>
+      <div class="years-row" style="margin-top:0.5rem; margin-bottom:0;">
+        <label for="chartScrollSlider" style="margin:0;">Scroll</label>
+        <input type="range" id="chartScrollSlider" min="0" max="140" value="0" style="flex:1; width:auto;">
+      </div>
+      <p class="giant-note" style="margin-top:0.6rem;">Illustrative shape based on documented spawn-timing windows — Klei doesn't publish exact daily odds, so treat this as a rough guide, not precise probabilities. The presence window assumes a giant lingers until its season ends if not killed, which is the general pattern but can vary.</p>
+
+      <div class="moon-readout" style="margin-top:1.1rem;">
+        <div class="moon-icon-badge" id="chartMoonBadge">🌑</div>
+        <div class="moon-readout-text">
+          <p class="season-name" id="chartMoonPhaseName">New Moon</p>
+          <p id="chartMoonSubtext">Moon phase on the previewed day</p>
+        </div>
+      </div>
+
+      <div class="notch-sm" id="chartBossPanel" style="margin-top:1rem; padding:0.8rem 1rem; border:2px solid var(--ink); background:var(--paper-shadow);">
+        <p class="season-name" id="chartBossTitle" style="margin:0 0 0.35rem; font-size:1.2rem;">No giant expected</p>
+        <p id="chartBossBlurb" style="margin:0 0 0.5rem; font-size:0.88rem; color:var(--ink-soft);"></p>
+        <a id="chartBossLink" href="#" target="_blank" rel="noopener" style="display:none; font-size:0.88rem;">For more information, click here →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch" data-page="tips">
+    <div class="card-head"><h2>Season tips</h2></div>
+    <div class="card-body">
+      <div class="filters" id="tipsFilters">
+        <button class="chip notch-sm active" data-tip-season="autumn" type="button">🍂 Autumn</button>
+        <button class="chip notch-sm" data-tip-season="winter" type="button">❄️ Winter</button>
+        <button class="chip notch-sm" data-tip-season="spring" type="button">🌱 Spring</button>
+        <button class="chip notch-sm" data-tip-season="summer" type="button">☀️ Summer</button>
+      </div>
+      <ul class="tip-list" id="tipsList"></ul>
+    </div>
+  </div>
+
+  <div class="card notch page-visible" data-page="tracker">
     <div class="card-head">
       <h2>Seasonal giants</h2>
       <button class="panel-toggle notch-sm" id="giantsToggle" type="button">Hide</button>
@@ -728,7 +868,7 @@
     </div>
   </div>
 
-  <div class="card notch">
+  <div class="card notch page-visible" data-page="tracker">
     <div class="card-head"><h2>The full log</h2></div>
     <div class="card-body">
       <div class="years-row">
@@ -753,15 +893,7 @@
     </div>
   </div>
 
-  <svg class="treeline" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true">
-    <g fill="none" stroke="var(--paper)" stroke-width="1.6" opacity="0.55">
-      <path d="M20 60 L20 30 M10 46 L20 30 L30 46 M6 54 L20 34 L34 54"/>
-      <path d="M70 60 L70 22 M58 42 L70 22 L82 42 M54 52 L70 28 L86 52 M50 60 L70 36 L90 60"/>
-      <path d="M330 60 L330 26 M320 44 L330 26 L340 44 M316 54 L330 30 L344 54"/>
-      <path d="M380 60 L380 32 M372 48 L380 32 L388 48"/>
-      <circle cx="200" cy="14" r="7" fill="var(--paper)" stroke="none" opacity="0.5"/>
-    </g>
-  </svg>
+  <div class="treeline" aria-hidden="true"></div>
 
   <footer>Default lengths match a standard-settings DST world (70-day year). Adjust them above if your world uses custom season settings.</footer>
 </div>
@@ -800,11 +932,49 @@
   }
 
   const GIANTS = {
-    autumn: { name: 'Bearger', icon: '🐻', link: 'https://dontstarve.wiki.gg/wiki/Bearger' },
-    winter: { name: 'Deerclops', icon: '👁️', link: 'https://dontstarve.wiki.gg/wiki/Deerclops' },
-    spring: { name: 'Moose/Goose', icon: '🦢', link: 'https://dontstarve.wiki.gg/wiki/Moose/Goose' },
-    summer: { name: 'Antlion', icon: '🐜', link: 'https://dontstarve.wiki.gg/wiki/Antlion' }
+    autumn: {
+      name: 'Bearger', icon: '🐻', link: 'https://dontstarve.wiki.gg/wiki/Bearger',
+      blurb: "A giant bear that smashes through trees, rocks, and structures alike. It's slow-moving but hits hard, and tends to wreck bases left in its path."
+    },
+    winter: {
+      name: 'Deerclops', icon: '👁️', link: 'https://dontstarve.wiki.gg/wiki/Deerclops',
+      blurb: "A hulking, one-eyed giant that rampages through the world, destroying structures and posing a serious fight if you're caught unprepared."
+    },
+    spring: {
+      name: 'Moose/Goose', icon: '🦢', link: 'https://dontstarve.wiki.gg/wiki/Moose/Goose',
+      blurb: "Starts as a fiercely protective mother goose guarding a nest of goslings, until the young eventually mature and she moves on."
+    },
+    summer: {
+      name: 'Antlion', icon: '🐜', link: 'https://dontstarve.wiki.gg/wiki/Antlion',
+      blurb: 'Lives underground and triggers earthquakes and sinkholes across the map, occasionally appeased with certain offerings.'
+    }
   };
+
+  const SEASON_TIPS = {
+    autumn: [
+      'Mild weather all around — the safest window to gather resources and get your base set up.',
+      'Start stockpiling logs, twigs, and food now while conditions are easy.',
+      'From the second autumn onward, Bearger can show up — keep an escape route or defenses ready.'
+    ],
+    winter: [
+      'Stay warm with a torch, warm clothing, or a nearby fire — freezing damages you directly.',
+      'Food spoils more slowly in the cold, which makes winter a good time to stock a pantry.',
+      'Deerclops can appear this season — many players prepare a fallback base or a fighting plan ahead of time.'
+    ],
+    spring: [
+      'Rain and lightning pick up — a lightning rod near your base helps protect it from strikes.',
+      'Everything gets damp, which can make fires harder to start — keep a lighter or two on hand.',
+      'Moose/Goose tends to show up early in spring, guarding a nest worth investigating carefully.'
+    ],
+    summer: [
+      'Overheating becomes the real threat — shade, ice, or a cooler base area all help.',
+      'Wildfires can start from the heat, so keep flammable structures spaced apart.',
+      'Antlion may awaken this season, causing periodic earthquakes and sinkholes.'
+    ]
+  };
+  let activeTipSeason = 'autumn';
+  let activeChartType = 'bar';
+
 
   const el = (id) => document.getElementById(id);
   const dayInput = el('dayInput');
@@ -959,10 +1129,13 @@
       seg.title = `${s}: ${len} days`;
       bar.appendChild(seg);
     });
+    const oldMarker = document.querySelector('#cycleBarWrap .cycle-marker');
+    if (oldMarker) oldMarker.remove();
     const marker = document.createElement('div');
     marker.className = 'cycle-marker';
     marker.style.left = (loc.dayInCycle / cycleLen * 100) + '%';
-    bar.appendChild(marker);
+    marker.innerHTML = `<span class="marker-label">Day ${day}</span><span class="marker-line"></span>`;
+    el('cycleBarWrap').appendChild(marker);
 
     const legend = el('legend');
     legend.innerHTML = '';
@@ -978,6 +1151,253 @@
     renderMoon(day);
     renderMoonLog(day);
     renderGiants(day, lengths, order, loc);
+    syncChartSlider(cycleLen, loc);
+    redrawChart();
+  }
+
+  function renderTips(season) {
+    const list = el('tipsList');
+    list.innerHTML = '';
+    (SEASON_TIPS[season] || []).forEach(tip => {
+      const li = document.createElement('li');
+      li.textContent = tip;
+      list.appendChild(li);
+    });
+  }
+
+  function giantLikelihood(season, dayInSeason, len, cycleIndex) {
+    if (len <= 0) return 0;
+    let peakFrac, beforeFrac, afterFrac;
+    if (season === 'winter') { peakFrac = 0.72; beforeFrac = 0.4; afterFrac = 0.25; }
+    else if (season === 'autumn') {
+      if (cycleIndex === 0) return 0;
+      peakFrac = 0.25; beforeFrac = 0.2; afterFrac = 0.7;
+    }
+    else if (season === 'spring') { peakFrac = 0.15; beforeFrac = 0.1; afterFrac = 0.1; }
+    else if (season === 'summer') { peakFrac = 0.05; beforeFrac = 0.05; afterFrac = 0.35; }
+    else return 0;
+
+    const peak = peakFrac * len;
+    const before = Math.max(beforeFrac * len, 1);
+    const after = Math.max(afterFrac * len, 1);
+    if (dayInSeason < peak - before || dayInSeason > peak + after) return 0;
+    if (dayInSeason <= peak) return (dayInSeason - (peak - before)) / before;
+    return 1 - (dayInSeason - peak) / after;
+  }
+
+  const GIANT_PEAK_FRAC = { winter: 0.72, autumn: 0.25, spring: 0.15, summer: 0.05 };
+
+  function bossPresentAt(loc, lengths) {
+    const season = loc.season;
+    const len = lengths[season];
+    if (!len) return null;
+    const pred = giantPrediction(season, 1, len, loc.cycleIndex);
+    if (!pred || pred.text === 'not yet') return null;
+    const spawnDayInSeason = GIANT_PEAK_FRAC[season] * len;
+    const dayInSeasonZero = loc.dayOfSeason - 1;
+    return dayInSeasonZero >= spawnDayInSeason ? GIANTS[season] : null;
+  }
+
+  let showBossWindow = false;
+  let chartWindowStart = 0;
+  let chartWindowEnd = 0;
+
+  function renderChart(lengths, order, currentLoc, windowStart, windowEnd, panOffsetDays, visibleSpanDays, previewLoc) {
+    const svg = el('seasonChart');
+    if (!svg) return;
+    const w = 300, h = 190, padT = 30, padB = 28, padL = 34, padR = 14;
+    const chartW = w - padL - padR, chartH = h - padT - padB;
+    const cycleLen = getCycleLength(lengths);
+    if (cycleLen <= 0) { svg.innerHTML = ''; return; }
+    const span = visibleSpanDays || cycleLen;
+    const offset = panOffsetDays || 0;
+
+    const segs = [];
+    for (let cy = windowStart; cy <= windowEnd; cy++) {
+      let cursor = (cy - windowStart) * cycleLen;
+      order.forEach(s => {
+        const len = lengths[s];
+        if (len <= 0) return;
+        segs.push({ season: s, start: cursor, len, cycleIndex: cy });
+        cursor += len;
+      });
+    }
+
+    const xScale = d => padL + ((d - offset) / span) * chartW;
+    const yScale = v => padT + chartH - v * chartH;
+
+    let content = '';
+    const axisLabelX = 10;
+    const axisLabelY = padT + chartH / 2;
+    content += `<line x1="${padL}" y1="${padT - 4}" x2="${padL}" y2="${yScale(0)}" stroke="var(--ink)" stroke-width="1.6"/>`;
+    content += `<text x="${axisLabelX}" y="${axisLabelY}" font-size="9.5" fill="var(--ink-soft)" text-anchor="middle" transform="rotate(-90 ${axisLabelX} ${axisLabelY})">Chance of that season's giant spawning</text>`;
+    [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+      const ty = yScale(v);
+      content += `<line x1="${padL - 3}" y1="${ty}" x2="${padL}" y2="${ty}" stroke="var(--ink)" stroke-width="1"/>`;
+      content += `<text x="${padL - 5}" y="${ty + 3}" text-anchor="end" font-size="7.5" fill="var(--ink-soft)">${Math.round(v * 100)}%</text>`;
+    });
+
+    content += `<defs><clipPath id="chartPlotClip"><rect x="${padL}" y="0" width="${chartW}" height="${h}"/></clipPath></defs>`;
+    let plotContent = '';
+
+    if (showBossWindow) {
+      segs.forEach(seg => {
+        if (seg.start + seg.len < offset || seg.start > offset + span) return;
+        const pred = giantPrediction(seg.season, seg.start + 1, seg.len, seg.cycleIndex);
+        if (!pred || pred.text === 'not yet') return;
+        const peakFrac = seg.season === 'winter' ? 0.72 : seg.season === 'autumn' ? 0.25 : seg.season === 'spring' ? 0.15 : 0.05;
+        const startX = xScale(seg.start + peakFrac * seg.len);
+        const endX = xScale(seg.start + seg.len);
+        plotContent += `<rect x="${startX}" y="${padT}" width="${Math.max(0, endX - startX)}" height="${chartH}" fill="var(--${seg.season})" fill-opacity="0.16"/>`;
+      });
+    }
+
+    segs.forEach(seg => {
+      if (seg.start + seg.len < offset || seg.start > offset + span) return;
+      const step = Math.max(1, Math.floor(seg.len / 40));
+      const pts = [];
+      for (let d = 0; d <= seg.len; d += step) {
+        pts.push({ x: xScale(seg.start + d), y: yScale(giantLikelihood(seg.season, d, seg.len, seg.cycleIndex)) });
+      }
+      if (pts[pts.length - 1].x < xScale(seg.start + seg.len)) {
+        pts.push({ x: xScale(seg.start + seg.len), y: yScale(giantLikelihood(seg.season, seg.len, seg.len, seg.cycleIndex)) });
+      }
+      const baseline = yScale(0);
+      if (activeChartType === 'bar') {
+        const areaPts = [`${pts[0].x},${baseline}`, ...pts.map(p => `${p.x},${p.y}`), `${pts[pts.length - 1].x},${baseline}`].join(' ');
+        plotContent += `<polygon points="${areaPts}" fill="var(--${seg.season})" fill-opacity="0.5" stroke="var(--${seg.season})" stroke-width="1.4"/>`;
+      } else {
+        const pathD = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' ');
+        plotContent += `<path d="${pathD}" fill="none" stroke="var(--${seg.season})" stroke-width="2.4"/>`;
+      }
+      plotContent += `<text x="${xScale(seg.start + seg.len / 2)}" y="${h - 8}" text-anchor="middle" font-size="12" fill="var(--ink-soft)">${seg.season.slice(0, 3)}</text>`;
+      const tickX = xScale(seg.start);
+      plotContent += `<line x1="${tickX}" y1="${baseline}" x2="${tickX}" y2="${baseline + 4}" stroke="var(--ink)" stroke-width="1.2"/>`;
+    });
+
+    for (let cy = windowStart; cy <= windowEnd; cy++) {
+      const yStartDay = (cy - windowStart) * cycleLen;
+      const yEndDay = yStartDay + cycleLen;
+      if (yEndDay < offset || yStartDay > offset + span) continue;
+      const x0 = xScale(yStartDay);
+      const x1 = xScale(yEndDay);
+      if (cy !== windowStart) {
+        plotContent += `<line x1="${x0}" y1="${padT - 10}" x2="${x0}" y2="${yScale(0)}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="1 2"/>`;
+      }
+      plotContent += `<text x="${(x0 + x1) / 2}" y="${padT - 14}" text-anchor="middle" font-size="10.5" fill="var(--ink-soft)">Year ${cy + 1}</text>`;
+    }
+
+    if (currentLoc && currentLoc.cycleIndex >= windowStart && currentLoc.cycleIndex <= windowEnd) {
+      const todayDay = (currentLoc.cycleIndex - windowStart) * cycleLen + currentLoc.dayInCycle;
+      if (todayDay >= offset && todayDay <= offset + span) {
+        const mx = xScale(todayDay);
+        plotContent += `<line x1="${mx}" y1="${padT - 8}" x2="${mx}" y2="${yScale(0)}" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 2"/>`;
+        plotContent += `<text x="${mx}" y="${padT - 22}" text-anchor="middle" font-size="10.5" fill="var(--accent)">Today: day ${currentLoc.dayInCycle + 1}</text>`;
+      }
+    }
+
+    if (previewLoc && previewLoc.cycleIndex >= windowStart && previewLoc.cycleIndex <= windowEnd) {
+      const pvDay = (previewLoc.cycleIndex - windowStart) * cycleLen + previewLoc.dayInCycle;
+      if (pvDay >= offset && pvDay <= offset + span) {
+        const px = xScale(pvDay);
+        plotContent += `<line x1="${px}" y1="${padT - 8}" x2="${px}" y2="${yScale(0)}" stroke="var(--moon)" stroke-width="2" stroke-dasharray="3 2"/>`;
+        plotContent += `<text x="${px}" y="${h - 20}" text-anchor="middle" font-size="10.5" fill="var(--moon)">Preview: day ${previewLoc.dayInCycle + 1}</text>`;
+        const presentGiant = bossPresentAt(previewLoc, lengths);
+        if (presentGiant) {
+          plotContent += `<text x="${px}" y="${padT - 12}" text-anchor="middle" font-size="15">${presentGiant.icon}</text>`;
+        }
+      }
+    }
+
+    content += `<g clip-path="url(#chartPlotClip)">${plotContent}</g>`;
+
+    content += `<line x1="${padL}" y1="${yScale(0)}" x2="${w - padR}" y2="${yScale(0)}" stroke="var(--ink)" stroke-width="1.6"/>`;
+
+    svg.innerHTML = content;
+  }
+
+  const CHART_YEARS_BACK = 1;
+  const CHART_YEARS_FORWARD = 1;
+  let chartCycleLen = 1;
+  let chartPanOffset = 0;
+
+  function syncChartSlider(cycleLen, currentLoc) {
+    const previewSlider = el('chartPreviewSlider');
+    const scrollSlider = el('chartScrollSlider');
+    if (!previewSlider || !scrollSlider) return;
+    chartCycleLen = cycleLen;
+    chartWindowStart = Math.max(0, currentLoc.cycleIndex - CHART_YEARS_BACK);
+    chartWindowEnd = currentLoc.cycleIndex + CHART_YEARS_FORWARD;
+    const totalDays = (chartWindowEnd - chartWindowStart + 1) * cycleLen;
+    const visibleSpan = cycleLen;
+    const maxOffset = Math.max(0, totalDays - visibleSpan);
+    const todayInWindow = (currentLoc.cycleIndex - chartWindowStart) * cycleLen + currentLoc.dayInCycle;
+    chartPanOffset = Math.min(maxOffset, Math.max(0, Math.round(todayInWindow - visibleSpan / 2)));
+
+    previewSlider.min = 0;
+    previewSlider.max = totalDays - 1;
+    previewSlider.value = todayInWindow;
+
+    scrollSlider.min = 0;
+    scrollSlider.max = maxOffset;
+    scrollSlider.value = chartPanOffset;
+  }
+
+  function chartDayYearAt(d) {
+    return { year: chartWindowStart + Math.floor(d / chartCycleLen) + 1, day: (d % chartCycleLen) + 1 };
+  }
+
+  function redrawChart() {
+    const lengths = getLengths();
+    const order = getOrderFromStart();
+    const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+    const currentLoc = locateDay(day, lengths, order);
+    const cycleLen = getCycleLength(lengths);
+    const visibleSpan = cycleLen;
+    const totalDays = (chartWindowEnd - chartWindowStart + 1) * cycleLen;
+    const maxOffset = Math.max(0, totalDays - visibleSpan);
+    chartPanOffset = Math.min(maxOffset, Math.max(0, chartPanOffset));
+
+    const previewDayInWindow = Math.max(0, parseInt(el('chartPreviewSlider').value, 10) || 0);
+    const previewAbsoluteDay = chartWindowStart * cycleLen + previewDayInWindow + 1;
+    const previewLoc = locateDay(previewAbsoluteDay, lengths, order);
+
+    const winLabel = el('chartWindowLabel');
+    if (winLabel) winLabel.textContent = `Data spans years ${chartWindowStart + 1}–${chartWindowEnd + 1}`;
+    const previewYD = chartDayYearAt(previewDayInWindow);
+    const previewLabel = el('chartPreviewDayLabel');
+    if (previewLabel) previewLabel.textContent = `year ${previewYD.year} day ${previewYD.day}`;
+
+    renderChart(lengths, order, currentLoc, chartWindowStart, chartWindowEnd, chartPanOffset, visibleSpan, previewLoc);
+    renderChartExtras(previewAbsoluteDay, previewLoc, lengths);
+  }
+
+  function renderChartExtras(previewAbsoluteDay, previewLoc, lengths) {
+    const dayIndex = (previewAbsoluteDay - 1) % MOON_CYCLE;
+    const phaseIdx = moonPhaseIndexFromDayIndex(dayIndex);
+    const badge = el('chartMoonBadge');
+    const nameEl = el('chartMoonPhaseName');
+    const subEl = el('chartMoonSubtext');
+    if (badge) badge.textContent = MOON_PHASE_ICONS[phaseIdx];
+    if (nameEl) nameEl.textContent = MOON_PHASE_NAMES[phaseIdx];
+    if (subEl) subEl.textContent = `On year ${previewLoc.cycleIndex + 1}, day ${previewLoc.dayInCycle + 1}`;
+
+    const season = previewLoc.season;
+    const giant = bossPresentAt(previewLoc, lengths);
+    const seasonGiant = GIANTS[season];
+
+    const titleEl = el('chartBossTitle');
+    const blurbEl = el('chartBossBlurb');
+    const linkEl = el('chartBossLink');
+    if (giant) {
+      if (titleEl) titleEl.textContent = `Current boss: ${giant.icon} ${giant.name}`;
+      if (blurbEl) blurbEl.textContent = giant.blurb;
+      if (linkEl) { linkEl.href = giant.link; linkEl.style.display = 'inline'; }
+    } else {
+      if (titleEl) titleEl.textContent = 'No giant currently active';
+      if (blurbEl) blurbEl.textContent = `On this day, ${seasonGiant ? seasonGiant.name : 'that season\u2019s giant'} likely hasn't spawned yet (or already left).`;
+      if (linkEl) linkEl.style.display = 'none';
+    }
   }
 
   function renderMoon(day) {
@@ -1206,6 +1626,120 @@
     });
   });
 
+  document.querySelectorAll('#chartFilters .chip[data-chart-type]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#chartFilters .chip[data-chart-type]').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeChartType = chip.getAttribute('data-chart-type');
+      redrawChart();
+    });
+  });
+
+  el('bossWindowToggle').addEventListener('click', () => {
+    showBossWindow = !showBossWindow;
+    el('bossWindowToggle').classList.toggle('active', showBossWindow);
+    redrawChart();
+  });
+
+  el('chartPreviewSlider').addEventListener('input', redrawChart);
+
+  (function setupPreviewStepButtons() {
+    const slider = el('chartPreviewSlider');
+    function step(delta) {
+      const min = parseInt(slider.min, 10) || 0;
+      const max = parseInt(slider.max, 10) || 0;
+      const next = Math.max(min, Math.min(max, (parseInt(slider.value, 10) || 0) + delta));
+      if (next === (parseInt(slider.value, 10) || 0)) return;
+      slider.value = next;
+      redrawChart();
+    }
+    function bind(btn, delta) {
+      let delayTimer = null;
+      let repeatTimer = null;
+      const stop = () => {
+        clearTimeout(delayTimer);
+        clearInterval(repeatTimer);
+        delayTimer = repeatTimer = null;
+      };
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        step(delta);
+        delayTimer = setTimeout(() => {
+          repeatTimer = setInterval(() => step(delta), 70);
+        }, 400);
+      });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+      btn.addEventListener('click', (e) => { if (e.detail === 0) step(delta); });
+    }
+    bind(el('previewPrevBtn'), -1);
+    bind(el('previewNextBtn'), 1);
+  })();
+
+  el('chartResetBtn').addEventListener('click', () => {
+    const lengths = getLengths();
+    const order = getOrderFromStart();
+    const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+    const cycleLen = getCycleLength(lengths);
+    const loc = locateDay(day, lengths, order);
+    syncChartSlider(cycleLen, loc);
+    redrawChart();
+  });
+
+  el('chartScrollSlider').addEventListener('input', () => {
+    chartPanOffset = Math.max(0, parseInt(el('chartScrollSlider').value, 10) || 0);
+    redrawChart();
+  });
+
+  (function setupChartScrub() {
+    const chartEl = el('seasonChart');
+    const previewSlider = el('chartPreviewSlider');
+    if (!chartEl || !previewSlider) return;
+    let scrubbing = false;
+
+    function scrubTo(clientX) {
+      const rect = chartEl.getBoundingClientRect();
+      if (!rect.width) return;
+      const fraction = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      const lengths = getLengths();
+      const cycleLen = getCycleLength(lengths);
+      const visibleSpan = cycleLen;
+      const dayInWindow = Math.round(chartPanOffset + fraction * visibleSpan);
+      const max = parseInt(previewSlider.max, 10) || 0;
+      previewSlider.value = Math.min(max, Math.max(0, dayInWindow));
+      redrawChart();
+    }
+
+    chartEl.addEventListener('pointerdown', (e) => {
+      scrubbing = true;
+      chartEl.setPointerCapture(e.pointerId);
+      scrubTo(e.clientX);
+    });
+    chartEl.addEventListener('pointermove', (e) => { if (scrubbing) scrubTo(e.clientX); });
+    chartEl.addEventListener('pointerup', () => { scrubbing = false; });
+    chartEl.addEventListener('pointercancel', () => { scrubbing = false; });
+  })();
+
+  document.querySelectorAll('#tipsFilters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#tipsFilters .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeTipSeason = chip.getAttribute('data-tip-season');
+      renderTips(activeTipSeason);
+    });
+  });
+
+  document.querySelectorAll('#pageNav .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const target = chip.getAttribute('data-page-tab');
+      document.querySelectorAll('#pageNav .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      document.querySelectorAll('.card[data-page]').forEach(card => {
+        card.classList.toggle('page-visible', card.getAttribute('data-page') === target);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
   themeToggle.addEventListener('click', () => {
     const current = document.documentElement.getAttribute('data-theme');
     const next = current === 'light' ? null : 'light';
@@ -1219,6 +1753,7 @@
   });
 
   loadState();
+  renderTips(activeTipSeason);
   render();
 })();
 </script>
