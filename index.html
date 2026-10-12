@@ -625,4 +625,1336 @@
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <path d="M27 5 A18 18 0 1 0 41 33 A14 14 0 1 1 27 5 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/>
         <path d="M17 44 C15 38 19 34 17 29 C22 33 24 27 22 22 C29 27 31 35 27 40 C28 36 26 34 24 33 C25 38 21 42 17 44 Z" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
-        <rect x="6" y
+        <rect x="6" y="43" width="28" height="3" rx="1" fill="var(--ink)" transform="rotate(-10 20 44.5)"/>
+        <rect x="10" y="43" width="28" height="3" rx="1" fill="var(--ink)" transform="rotate(10 24 44.5)"/>
+      </svg>
+      <span class="topbar-title">DST Day <span class="amp-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><text x="20" y="31" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="36" fill="var(--accent)">&amp;</text></svg></span> Season Tracker</span>
+    </span>
+    <button class="chip notch-sm" id="seasonBgToggle" type="button">🎨 Change background</button>
+    <button class="theme-toggle notch-sm" id="themeToggle" type="button">Toggle theme</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="sub-intro">Keeping track of the days, so you don't have to guess</p>
+
+  <div class="card notch card-full">
+    <div class="card-body">
+      <div class="day-input-row">
+        <div>
+          <label for="dayInput">Current day</label>
+          <input type="number" id="dayInput" min="1" value="1" inputmode="numeric">
+        </div>
+        <button class="today-btn notch-sm" id="bumpDay" type="button">+1 day</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-nav" id="pageNav">
+    <button class="chip notch-sm active" data-page-tab="tracker" type="button">📅 Day Tracker</button>
+    <button class="chip notch-sm" data-page-tab="graphs" type="button">📊 Graphs</button>
+    <button class="chip notch-sm" data-page-tab="tips" type="button">💡 Tips</button>
+  </div>
+
+  <div class="card notch card-full page-visible" data-page="tracker">
+    <div class="card-body">
+      <div class="readout" id="readout">
+        <div class="season-badge" id="seasonBadge">🍂</div>
+        <div class="readout-text">
+          <p class="season-name" id="seasonName">Autumn</p>
+          <p id="seasonDetail">Day 1 of this season</p>
+          <p id="seasonRemaining">19 days left before winter</p>
+        </div>
+      </div>
+
+      <div class="cycle-bar-wrap" id="cycleBarWrap">
+        <div class="cycle-bar" id="cycleBar"></div>
+        <div class="cycle-labels">
+          <span>Start of year</span>
+          <span id="yearLengthTop">70-day year</span>
+          <span>End of year</span>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch page-visible" data-page="tracker">
+    <div class="card-head"><h2>Moon cycle</h2></div>
+    <div class="card-body">
+      <div class="moon-readout">
+        <div class="moon-icon-badge" id="moonBadge">🌑</div>
+        <div class="moon-readout-text">
+          <p class="season-name" id="moonPhaseName">New Moon</p>
+          <p id="moonNextFull">Full moon in 10 days</p>
+          <p id="moonNextNew">New moon in 20 days</p>
+        </div>
+      </div>
+      <div class="moon-bar" id="moonBar"></div>
+      <p class="giant-note" id="moonClickInfo" style="margin-top:0.6rem;">Tap a phase above to see when it's next due.</p>
+    </div>
+  </div>
+
+  <div class="card notch page-visible" data-page="tracker">
+    <div class="card-head">
+      <h2>Moon nights log</h2>
+      <button class="panel-toggle notch-sm" id="moonLogToggle" type="button">Hide</button>
+    </div>
+    <div class="card-body" id="moonLogPanel">
+      <div class="years-row">
+        <label for="moonCyclesInput" style="margin:0;">Moon cycles to list</label>
+        <input type="number" id="moonCyclesInput" min="1" max="400" value="20">
+      </div>
+      <div class="filters" id="moonFilters">
+        <button class="chip notch-sm active" data-phase="all" type="button">All</button>
+        <button class="chip notch-sm" data-phase="0" type="button">🌑 New</button>
+        <button class="chip notch-sm" data-phase="4" type="button">🌕 Full</button>
+        <button class="chip notch-sm" data-phase="2" type="button">🌓 1st qtr</button>
+        <button class="chip notch-sm" data-phase="6" type="button">🌗 Last qtr</button>
+      </div>
+      <div class="log-scroll">
+        <table class="log-table">
+          <thead>
+            <tr><th>Cycle</th><th>Phase</th><th>Night</th></tr>
+          </thead>
+          <tbody id="moonLogBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch page-visible" data-page="tracker">
+    <div class="card-head">
+      <h2>World settings</h2>
+      <button class="panel-toggle notch-sm" id="settingsToggle" type="button">Show</button>
+    </div>
+    <div class="card-body" id="settingsPanel" style="display:none;">
+      <div class="settings-grid">
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--autumn)"></span>Autumn</div>
+          <select id="len-autumn">
+            <option value="none">None</option>
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
+        </div>
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--winter)"></span>Winter</div>
+          <select id="len-winter">
+            <option value="none">None</option>
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
+        </div>
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--spring)"></span>Spring</div>
+          <select id="len-spring">
+            <option value="none">None</option>
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
+        </div>
+        <div>
+          <div class="season-label"><span class="swatch" style="background:var(--summer)"></span>Summer</div>
+          <select id="len-summer">
+            <option value="none">None</option>
+            <option value="veryshort">Very Short</option>
+            <option value="short">Short</option>
+            <option value="default" selected>Default</option>
+            <option value="long">Long</option>
+            <option value="verylong">Very Long</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="startSeason">World starts in</label>
+          <select id="startSeason">
+            <option value="autumn">Autumn</option>
+            <option value="winter">Winter</option>
+            <option value="spring">Spring</option>
+            <option value="summer">Summer</option>
+          </select>
+        </div>
+        <div class="full" id="yearLengthSettingsWrap">
+          <p class="giant-note" id="yearLengthSettings" style="margin:0.4rem 0 0;">Current year length: 70 days</p>
+        </div>
+        <div class="full reset-row">
+          <button class="notch-sm" id="resetDefaults" type="button">Reset to default lengths</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch page-visible" data-page="tracker">
+    <div class="card-head"><h2>What's coming up</h2></div>
+    <div class="card-body">
+      <ul class="upcoming-list" id="upcomingList"></ul>
+    </div>
+  </div>
+
+  <div class="card notch" data-page="graphs">
+    <div class="card-head"><h2>Boss spawn chance chart</h2></div>
+    <div class="card-body">
+      <div class="filters" id="chartFilters">
+        <button class="chip notch-sm" id="bossWindowToggle" type="button">🛡️ Show presence window</button>
+        <button class="chip notch-sm" id="seasonChartBgToggle" type="button">🖼️ Show season background</button>
+      </div>
+      <p class="giant-note" style="margin:0 0 0.7rem;">*Presence window shades the days a spawned giant will likely still exist in your world, from its estimated spawn point until its season ends.</p>
+      <div class="years-row" style="margin-bottom:0.3rem; justify-content:space-between;">
+        <span id="chartWindowLabel" style="font-style:italic;">Data spans years 1–3</span>
+        <button class="chip notch-sm" id="chartResetBtn" type="button">Reset</button>
+      </div>
+      <div style="margin-bottom:0.7rem;">
+        <label for="chartPreviewSlider" style="margin:0 0 0.35rem;">Preview <span id="chartPreviewDayLabel">day 1</span></label>
+        <div class="years-row" style="margin-bottom:0;">
+          <button class="chip notch-sm step-btn" id="previewPrevBtn" type="button" aria-label="Previous day">◀</button>
+          <input type="range" id="chartPreviewSlider" min="0" max="210" value="0" style="flex:1; width:auto;">
+          <button class="chip notch-sm step-btn" id="previewNextBtn" type="button" aria-label="Next day">▶</button>
+        </div>
+      </div>
+      <svg id="seasonChart" viewBox="0 0 300 190" style="width:100%; height:auto; display:block; min-height:240px; touch-action:pan-y; cursor:pointer;"></svg>
+      <div class="years-row" style="margin-top:0.5rem; margin-bottom:0;">
+        <label for="chartScrollSlider" style="margin:0;">Scroll</label>
+        <input type="range" id="chartScrollSlider" min="0" max="140" value="0" style="flex:1; width:auto;">
+      </div>
+      <p class="giant-note" style="margin-top:0.6rem;"><strong>The Y-axis is a relative shape, not a real percentage</strong> — Klei doesn't publish exact daily odds, so "Peak" just means "the day our best estimate points to," not "100% guaranteed." The specific day numbers shown elsewhere (Seasonal Giants list, Full Log) are tested against real reported data for the common cases, but the chart's curve width/shape is illustrative. The presence window assumes a giant lingers until its season ends if not killed, which is the general pattern but can vary. This models a fresh spawn attempt each season — it can't know if you've killed a previous giant, so it doesn't account for the game's actual respawn-cooldown timer, which can occasionally delay a spawn past a short season or skip it entirely.</p>
+
+      <div class="moon-readout" style="margin-top:1.1rem;">
+        <div class="moon-icon-badge" id="chartMoonBadge">🌑</div>
+        <div class="moon-readout-text">
+          <p class="season-name" id="chartMoonPhaseName">New Moon</p>
+          <p id="chartMoonSubtext">Moon phase on the previewed day</p>
+        </div>
+      </div>
+
+      <div class="notch-sm" id="chartBossPanel" style="margin-top:1rem; padding:0.8rem 1rem; border:2px solid var(--ink); background:var(--paper-shadow);">
+        <p class="season-name" id="chartBossTitle" style="margin:0 0 0.35rem; font-size:1.2rem;">No giant expected</p>
+        <p id="chartBossBlurb" style="margin:0 0 0.5rem; font-size:0.88rem; color:var(--ink-soft);"></p>
+        <a id="chartBossLink" href="#" target="_blank" rel="noopener" style="display:none; font-size:0.88rem;">For more information, click here →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card notch" data-page="tips">
+    <div class="card-head"><h2>Season tips</h2></div>
+    <div class="card-body">
+      <div class="filters" id="tipsFilters">
+        <button class="chip notch-sm active" data-tip-season="autumn" type="button">🍂 Autumn</button>
+        <button class="chip notch-sm" data-tip-season="winter" type="button">❄️ Winter</button>
+        <button class="chip notch-sm" data-tip-season="spring" type="button">🌱 Spring</button>
+        <button class="chip notch-sm" data-tip-season="summer" type="button">☀️ Summer</button>
+      </div>
+      <ul class="tip-list" id="tipsList"></ul>
+    </div>
+  </div>
+
+  <div class="card notch page-visible" data-page="tracker">
+    <div class="card-head">
+      <h2>Seasonal giants</h2>
+      <button class="panel-toggle notch-sm" id="giantsToggle" type="button">Hide</button>
+    </div>
+    <div class="card-body" id="giantsPanel">
+      <ul class="giant-list" id="giantList"></ul>
+      <p class="giant-note">Predicted days are estimates based on documented default-game timings, scaled to your season lengths — actual spawns can drift by a day or two. No giant can appear before day 29 of the world. For Deerclops, Bearger, and Antlion, starting that early doesn't just skip the season entirely — the spawn calculation restarts counting from day 29 itself, so a long enough starting season can still get a giant (confirmed by Klei as intended for Bearger, not a bug). Moose/Goose uses the simpler "just blocked if too early" model instead, since that restart behavior isn't specifically confirmed for it.</p>
+    </div>
+  </div>
+
+  <div class="card notch page-visible" data-page="tracker">
+    <div class="card-head"><h2>The full log</h2></div>
+    <div class="card-body">
+      <div class="years-row">
+        <label for="yearsInput" style="margin:0;">Years to list</label>
+        <input type="number" id="yearsInput" min="1" max="200" value="15">
+      </div>
+      <div class="filters" id="filters">
+        <button class="chip notch-sm active" data-season="all" type="button">All</button>
+        <button class="chip notch-sm" data-season="autumn" type="button">Autumn</button>
+        <button class="chip notch-sm" data-season="winter" type="button">Winter</button>
+        <button class="chip notch-sm" data-season="spring" type="button">Spring</button>
+        <button class="chip notch-sm" data-season="summer" type="button">Summer</button>
+      </div>
+      <div class="log-scroll">
+        <table class="log-table">
+          <thead>
+            <tr><th>Year</th><th>Season</th><th>Days</th><th>Giant</th></tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="treeline" aria-hidden="true"></div>
+
+  <footer>Default lengths match a standard-settings DST world (70-day year). Adjust them above if your world uses custom season settings.</footer>
+</div>
+
+<script>
+(function () {
+  const SEASON_ICONS = { autumn: '🍂', winter: '❄️', spring: '🌱', summer: '☀️' };
+  const SEASON_ORDER = ['autumn', 'winter', 'spring', 'summer'];
+  const DEFAULT_LENGTHS = { autumn: 20, winter: 15, spring: 20, summer: 15 };
+
+  const SEASON_PRESETS = {
+    autumn: { none: 0, veryshort: 5, short: 12, default: 20, long: 30, verylong: 50 },
+    winter: { none: 0, veryshort: 5, short: 10, default: 15, long: 22, verylong: 40 },
+    spring: { none: 0, veryshort: 5, short: 12, default: 20, long: 30, verylong: 50 },
+    summer: { none: 0, veryshort: 5, short: 10, default: 15, long: 22, verylong: 40 }
+  };
+
+  const SEASON_LINKS = {
+    autumn: 'https://dontstarve.wiki.gg/wiki/Autumn',
+    winter: 'https://dontstarve.wiki.gg/wiki/Winter',
+    spring: 'https://dontstarve.wiki.gg/wiki/Spring',
+    summer: 'https://dontstarve.wiki.gg/wiki/Summer'
+  };
+  const MOON_LINK = 'https://dontstarve.wiki.gg/wiki/Moon_Cycle';
+
+  const MOON_CYCLE = 20;
+  const MOON_PHASE_NAMES = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
+  const MOON_PHASE_ICONS = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
+  const MOON_BOUNDS = [0, 2, 5, 7, 10, 12, 15, 17, 20];
+
+  function moonPhaseIndexFromDayIndex(dayIndex) {
+    for (let p = 0; p < 8; p++) {
+      if (dayIndex < MOON_BOUNDS[p + 1]) return p;
+    }
+    return 7;
+  }
+
+  const GIANTS = {
+    autumn: {
+      name: 'Bearger', icon: '🐻', link: 'https://dontstarve.wiki.gg/wiki/Bearger',
+      blurb: "A giant bear that smashes through trees, rocks, and structures alike. It's slow-moving but hits hard, and tends to wreck bases left in its path."
+    },
+    winter: {
+      name: 'Deerclops', icon: '👁️', link: 'https://dontstarve.wiki.gg/wiki/Deerclops',
+      blurb: "A hulking, one-eyed giant that rampages through the world, destroying structures and posing a serious fight if you're caught unprepared."
+    },
+    spring: {
+      name: 'Moose/Goose', icon: '🦢', link: 'https://dontstarve.wiki.gg/wiki/Moose/Goose',
+      blurb: "Starts as a fiercely protective mother goose guarding a nest of goslings, until the young eventually mature and she moves on."
+    },
+    summer: {
+      name: 'Antlion', icon: '🐜', link: 'https://dontstarve.wiki.gg/wiki/Antlion',
+      blurb: 'Lives underground and triggers earthquakes and sinkholes across the map, occasionally appeased with certain offerings.'
+    }
+  };
+
+  const SEASON_TIPS = {
+    autumn: [
+      'Mild weather all around — the safest window to gather resources and get your base set up.',
+      'Start stockpiling logs, twigs, and food now while conditions are easy.',
+      'From the second autumn onward, Bearger can show up — keep an escape route or defenses ready.'
+    ],
+    winter: [
+      'Stay warm with a torch, warm clothing, or a nearby fire — freezing damages you directly.',
+      'Food spoils more slowly in the cold, which makes winter a good time to stock a pantry.',
+      'Deerclops can appear this season — many players prepare a fallback base or a fighting plan ahead of time.'
+    ],
+    spring: [
+      'Rain and lightning pick up — a lightning rod near your base helps protect it from strikes.',
+      'Everything gets damp, which can make fires harder to start — keep a lighter or two on hand.',
+      'Moose/Goose tends to show up early in spring, guarding a nest worth investigating carefully.'
+    ],
+    summer: [
+      'Overheating becomes the real threat — shade, ice, or a cooler base area all help.',
+      'Wildfires can start from the heat, so keep flammable structures spaced apart.',
+      'Antlion may awaken this season, causing periodic earthquakes and sinkholes.'
+    ]
+  };
+  let activeTipSeason = 'autumn';
+
+
+  const el = (id) => document.getElementById(id);
+  const dayInput = el('dayInput');
+  const settingsToggle = el('settingsToggle');
+  const settingsPanel = el('settingsPanel');
+  const startSeasonSel = el('startSeason');
+  const yearsInput = el('yearsInput');
+  const moonCyclesInput = el('moonCyclesInput');
+  const themeToggle = el('themeToggle');
+
+  const lenInputs = {
+    autumn: el('len-autumn'),
+    winter: el('len-winter'),
+    spring: el('len-spring'),
+    summer: el('len-summer')
+  };
+
+  let activeFilter = 'all';
+  let activeMoonFilter = 'all';
+
+  function safeGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function safeSet(key, val) {
+    try { localStorage.setItem(key, val); } catch (e) { /* ignore */ }
+  }
+
+  function loadState() {
+    const savedDay = safeGet('dst_day');
+    const savedLens = safeGet('dst_lengths');
+    const savedStart = safeGet('dst_start');
+    const savedYears = safeGet('dst_years');
+    const savedMoonCycles = safeGet('dst_moon_cycles');
+    const savedTheme = safeGet('dst_theme');
+    const savedSeasonBg = safeGet('dst_season_bg');
+
+    if (savedDay) dayInput.value = savedDay;
+    if (savedSeasonBg === '1') {
+      seasonBgEnabled = true;
+      el('seasonBgToggle').classList.add('active');
+    }
+    if (savedLens) {
+      try {
+        const parsed = JSON.parse(savedLens);
+        SEASON_ORDER.forEach(s => {
+          if (parsed[s] != null && SEASON_PRESETS[s][parsed[s]] != null) lenInputs[s].value = parsed[s];
+        });
+      } catch (e) { /* ignore */ }
+    }
+    if (savedStart) startSeasonSel.value = savedStart;
+    if (savedYears) yearsInput.value = savedYears;
+    if (savedMoonCycles) moonCyclesInput.value = savedMoonCycles;
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+
+  function getLengths() {
+    const l = {};
+    SEASON_ORDER.forEach(s => {
+      const key = lenInputs[s].value;
+      l[s] = SEASON_PRESETS[s][key] != null ? SEASON_PRESETS[s][key] : SEASON_PRESETS[s].default;
+    });
+    return l;
+  }
+
+  function getOrderFromStart() {
+    const start = startSeasonSel.value;
+    const idx = SEASON_ORDER.indexOf(start);
+    return SEASON_ORDER.slice(idx).concat(SEASON_ORDER.slice(0, idx));
+  }
+
+  function getCycleLength(lengths) {
+    return SEASON_ORDER.reduce((sum, s) => sum + lengths[s], 0);
+  }
+
+  function locateDay(day, lengths, order) {
+    const cycleLen = getCycleLength(lengths);
+    if (cycleLen <= 0) return null;
+    const zeroDay = day - 1;
+    const cycleIndex = Math.floor(zeroDay / cycleLen);
+    let dayInCycle = zeroDay % cycleLen;
+    let acc = 0;
+    for (const s of order) {
+      const len = lengths[s];
+      if (len <= 0) continue;
+      if (dayInCycle < acc + len) {
+        return {
+          season: s,
+          dayOfSeason: dayInCycle - acc + 1,
+          daysLeftInSeason: acc + len - dayInCycle,
+          cycleIndex,
+          dayInCycle
+        };
+      }
+      acc += len;
+    }
+    return { season: order.find(s => lengths[s] > 0) || order[0], dayOfSeason: 1, daysLeftInSeason: 1, cycleIndex, dayInCycle };
+  }
+
+  function nextSeasonAfter(season, order) {
+    const idx = order.indexOf(season);
+    return order[(idx + 1) % order.length];
+  }
+
+  function render() {
+    const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+    const lengths = getLengths();
+    const order = getOrderFromStart();
+    const cycleLen = getCycleLength(lengths);
+
+    safeSet('dst_day', String(day));
+    safeSet('dst_lengths', JSON.stringify({
+      autumn: lenInputs.autumn.value,
+      winter: lenInputs.winter.value,
+      spring: lenInputs.spring.value,
+      summer: lenInputs.summer.value
+    }));
+    safeSet('dst_start', startSeasonSel.value);
+    safeSet('dst_years', yearsInput.value);
+    safeSet('dst_moon_cycles', moonCyclesInput.value);
+
+    el('yearLengthTop').textContent = `${cycleLen}-day year`;
+    el('yearLengthSettings').textContent = `Current year length: ${cycleLen} days`;
+
+    if (cycleLen <= 0) {
+      el('seasonName').textContent = 'No seasons active';
+      el('seasonDetail').textContent = 'Give at least one season a length above 0.';
+      el('seasonRemaining').textContent = '';
+      el('cycleBar').innerHTML = '';
+      el('legend').innerHTML = '';
+      el('upcomingList').innerHTML = '';
+      el('logBody').innerHTML = '';
+      el('giantList').innerHTML = '';
+      return;
+    }
+
+    const loc = locateDay(day, lengths, order);
+    el('seasonBadge').textContent = SEASON_ICONS[loc.season];
+    el('seasonBadge').style.borderColor = `var(--${loc.season})`;
+    el('seasonName').innerHTML = `<a href="${SEASON_LINKS[loc.season]}" target="_blank" rel="noopener">${loc.season}</a>`;
+    el('seasonDetail').textContent = `Day ${loc.dayOfSeason} of this ${loc.season} (day ${day} overall, year ${loc.cycleIndex + 1})`;
+    const nextS = nextSeasonAfter(loc.season, order);
+    if (loc.daysLeftInSeason === 1) {
+      el('seasonRemaining').textContent = `${nextS[0].toUpperCase()+nextS.slice(1)} begins tomorrow`;
+    } else {
+      el('seasonRemaining').textContent = `${loc.daysLeftInSeason} days left before ${nextS}`;
+    }
+
+    const bar = el('cycleBar');
+    bar.innerHTML = '';
+    order.forEach(s => {
+      const len = lengths[s];
+      if (len <= 0) return;
+      const seg = document.createElement('div');
+      seg.className = 'cycle-seg';
+      seg.style.width = (len / cycleLen * 100) + '%';
+      seg.style.background = `var(--${s})`;
+      seg.title = `${s}: ${len} days`;
+      bar.appendChild(seg);
+    });
+    let marker = el('cycleRealMarker');
+    if (!marker) {
+      marker = document.createElement('div');
+      marker.id = 'cycleRealMarker';
+      marker.className = 'cycle-marker';
+      el('cycleBarWrap').appendChild(marker);
+    }
+    marker.style.left = (loc.dayInCycle / cycleLen * 100) + '%';
+    marker.innerHTML = `<span class="marker-label">Day ${day}</span><span class="marker-line"></span>`;
+
+    const legend = el('legend');
+    legend.innerHTML = '';
+    order.forEach(s => {
+      if (lengths[s] <= 0) return;
+      const span = document.createElement('span');
+      span.innerHTML = `<span class="swatch" style="background:var(--${s})"></span><a href="${SEASON_LINKS[s]}" target="_blank" rel="noopener">${s}</a> (${lengths[s]}d)`;
+      legend.appendChild(span);
+    });
+
+    renderUpcoming(day, lengths, order);
+    renderLog(day, lengths, order);
+    renderMoon(day);
+    renderMoonLog(day);
+    renderGiants(day, lengths, order, loc);
+    syncChartSlider(cycleLen, loc);
+    redrawChart();
+    applySeasonBackground(loc.season);
+  }
+
+  function renderTips(season) {
+    const list = el('tipsList');
+    list.innerHTML = '';
+    (SEASON_TIPS[season] || []).forEach(tip => {
+      const li = document.createElement('li');
+      li.textContent = tip;
+      list.appendChild(li);
+    });
+  }
+
+  const GIANT_MIN_DAY = 29;
+
+  const GIANT_FRACTION = { winter: 0.72, autumn: 0.25, summer: 0 };
+
+  function giantSpawnDayNumber(season, seasonStartAbsolute, len) {
+    const frac = GIANT_FRACTION[season];
+    if (frac == null) return null;
+    const natural = seasonStartAbsolute + frac * len;
+    if (natural >= GIANT_MIN_DAY) return { day: natural, verified: true };
+    const eligibleFrom = GIANT_MIN_DAY;
+    const remainingLen = seasonStartAbsolute + len - eligibleFrom;
+    if (remainingLen <= 0) return null;
+    return { day: eligibleFrom + frac * remainingLen, verified: season === 'autumn' };
+  }
+
+  const GIANT_UNKNOWN = 'unknown';
+
+  function giantPeakDayInSeason(season, len, seasonStartAbsolute) {
+    if (len <= 0) return null;
+    if (season === 'spring') {
+      const dayHigh = seasonStartAbsolute + (4 / 20) * len;
+      const seasonEnd = seasonStartAbsolute + len;
+      if (seasonEnd < GIANT_MIN_DAY) return null;
+      if (dayHigh < GIANT_MIN_DAY) return GIANT_UNKNOWN;
+      const raw = 0.15 * len - 1;
+      return Math.max(0, Math.min(len - 0.01, raw));
+    }
+    const result = giantSpawnDayNumber(season, seasonStartAbsolute, len);
+    if (result == null) return null;
+    return Math.max(0, Math.min(len - 0.01, result.day - seasonStartAbsolute - 1));
+  }
+
+  const GIANT_SPREAD = {
+    winter: { before: 0.02, after: 0.02 },
+    autumn: { before: 0.065, after: 0.065 },
+    spring: { before: 0.05, after: 0.05 },
+    summer: { before: 0.02, after: 0.2 }
+  };
+
+  function giantLikelihood(season, dayInSeason, len, seasonStartAbsolute) {
+    if (len <= 0) return 0;
+    const peak = giantPeakDayInSeason(season, len, seasonStartAbsolute);
+    if (peak == null) return 0;
+    if (peak === GIANT_UNKNOWN) {
+      const gateDayInSeason = GIANT_MIN_DAY - seasonStartAbsolute - 1;
+      return dayInSeason >= gateDayInSeason ? 0.3 : 0;
+    }
+    const spread = GIANT_SPREAD[season];
+    if (!spread) return 0;
+
+    const before = Math.max(spread.before * len, 1);
+    const after = Math.max(spread.after * len, 1);
+    if (dayInSeason < peak - before || dayInSeason > peak + after) return 0;
+    if (dayInSeason <= peak) return (dayInSeason - (peak - before)) / before;
+    return 1 - (dayInSeason - peak) / after;
+  }
+
+  function bossPresentAt(loc, lengths) {
+    const season = loc.season;
+    const len = lengths[season];
+    if (!len) return null;
+    const cycleLen = getCycleLength(lengths);
+    const seasonStartAbsolute = loc.cycleIndex * cycleLen + (loc.dayInCycle - (loc.dayOfSeason - 1));
+    const peak = giantPeakDayInSeason(season, len, seasonStartAbsolute);
+    if (peak == null) return null;
+    const dayInSeasonZero = loc.dayOfSeason - 1;
+    if (peak === GIANT_UNKNOWN) {
+      const gateDayInSeason = GIANT_MIN_DAY - seasonStartAbsolute - 1;
+      return dayInSeasonZero >= gateDayInSeason ? GIANT_UNKNOWN : null;
+    }
+    return dayInSeasonZero >= peak ? GIANTS[season] : null;
+  }
+
+  let showBossWindow = false;
+  let showSeasonChartBg = false;
+  let chartWindowStart = 0;
+  let chartWindowEnd = 0;
+
+  function renderChart(lengths, order, currentLoc, windowStart, windowEnd, panOffsetDays, visibleSpanDays, previewLoc) {
+    const svg = el('seasonChart');
+    if (!svg) return;
+    const w = 300, h = 190, padT = 30, padB = 28, padL = 34, padR = 14;
+    const chartW = w - padL - padR, chartH = h - padT - padB;
+    const cycleLen = getCycleLength(lengths);
+    if (cycleLen <= 0) { svg.innerHTML = ''; return; }
+    const span = visibleSpanDays || cycleLen;
+    const offset = panOffsetDays || 0;
+
+    const segs = [];
+    for (let cy = windowStart; cy <= windowEnd; cy++) {
+      let cursor = (cy - windowStart) * cycleLen;
+      let withinCycleCursor = 0;
+      order.forEach(s => {
+        const len = lengths[s];
+        if (len <= 0) return;
+        segs.push({ season: s, start: cursor, len, cycleIndex: cy, trueStart: cy * cycleLen + withinCycleCursor });
+        cursor += len;
+        withinCycleCursor += len;
+      });
+    }
+
+    const plotH = chartH - 25;
+    const xScale = d => padL + ((d - offset) / span) * chartW;
+    const yScale = v => padT + plotH - v * plotH;
+
+    let content = '';
+    const axisLabelX = 10;
+    const axisLabelY = padT + plotH / 2;
+    content += `<line x1="${padL}" y1="${padT - 4}" x2="${padL}" y2="${yScale(0)}" stroke="var(--ink)" stroke-width="1.6"/>`;
+    content += `<text x="${axisLabelX}" y="${axisLabelY}" font-size="9.5" fill="var(--ink-soft)" text-anchor="middle" transform="rotate(-90 ${axisLabelX} ${axisLabelY})">Relative likelihood (estimate, not a real %)</text>`;
+    const LIKELIHOOD_LABELS = { 0: 'None', 0.25: 'Low', 0.5: 'Moderate', 0.75: 'High', 1: 'Peak' };
+    [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+      const ty = yScale(v);
+      content += `<line x1="${padL - 3}" y1="${ty}" x2="${padL}" y2="${ty}" stroke="var(--ink)" stroke-width="1"/>`;
+      content += `<text x="${padL - 5}" y="${ty + 3}" text-anchor="end" font-size="7" fill="var(--ink-soft)">${LIKELIHOOD_LABELS[v]}</text>`;
+      content += `<line x1="${padL}" y1="${ty}" x2="${w - padR}" y2="${ty}" stroke="var(--ink-soft)" stroke-width="0.6" stroke-dasharray="1.5 2.5" opacity="0.5"/>`;
+    });
+
+    content += `<defs><clipPath id="chartPlotClip"><rect x="${padL}" y="0" width="${chartW}" height="${h}"/></clipPath></defs>`;
+    let plotContent = '';
+
+    if (showSeasonChartBg) {
+      segs.forEach(seg => {
+        if (seg.start + seg.len < offset || seg.start > offset + span) return;
+        const x0 = xScale(seg.start);
+        const x1 = xScale(seg.start + seg.len);
+        plotContent += `<rect x="${x0}" y="${padT}" width="${Math.max(0, x1 - x0)}" height="${plotH}" fill="var(--${seg.season})" fill-opacity="0.22"/>`;
+      });
+    }
+
+    if (showBossWindow) {
+      segs.forEach(seg => {
+        if (seg.start + seg.len < offset || seg.start > offset + span) return;
+        const peakInSeason = giantPeakDayInSeason(seg.season, seg.len, seg.trueStart);
+        if (peakInSeason == null || peakInSeason === GIANT_UNKNOWN) return;
+        const startX = xScale(seg.start + peakInSeason);
+        const endX = xScale(seg.start + seg.len);
+        plotContent += `<rect x="${startX}" y="${padT}" width="${Math.max(0, endX - startX)}" height="${plotH}" fill="var(--${seg.season})" fill-opacity="0.16"/>`;
+      });
+    }
+
+    segs.forEach(seg => {
+      if (seg.start + seg.len < offset || seg.start > offset + span) return;
+      const step = Math.max(1, Math.floor(seg.len / 40));
+      const pts = [];
+      for (let d = 0; d <= seg.len; d += step) {
+        pts.push({ x: xScale(seg.start + d), y: yScale(giantLikelihood(seg.season, d, seg.len, seg.trueStart)) });
+      }
+      if (pts[pts.length - 1].x < xScale(seg.start + seg.len)) {
+        pts.push({ x: xScale(seg.start + seg.len), y: yScale(giantLikelihood(seg.season, seg.len, seg.len, seg.trueStart)) });
+      }
+      const baseline = yScale(0);
+      const areaPts = [`${pts[0].x},${baseline}`, ...pts.map(p => `${p.x},${p.y}`), `${pts[pts.length - 1].x},${baseline}`].join(' ');
+      plotContent += `<polygon points="${areaPts}" fill="var(--${seg.season})" fill-opacity="0.5" stroke="var(--${seg.season})" stroke-width="1.4"/>`;
+      plotContent += `<text x="${xScale(seg.start + seg.len / 2)}" y="${h - 8}" text-anchor="middle" font-size="12" fill="var(--ink-soft)">${seg.season.slice(0, 3)}</text>`;
+      const tickX = xScale(seg.start);
+      plotContent += `<line x1="${tickX}" y1="${baseline}" x2="${tickX}" y2="${baseline + 4}" stroke="var(--ink)" stroke-width="1.2"/>`;
+    });
+
+    for (let cy = windowStart; cy <= windowEnd; cy++) {
+      const yStartDay = (cy - windowStart) * cycleLen;
+      const yEndDay = yStartDay + cycleLen;
+      if (yEndDay < offset || yStartDay > offset + span) continue;
+      const x0 = xScale(yStartDay);
+      const x1 = xScale(yEndDay);
+      if (cy !== windowStart) {
+        plotContent += `<line x1="${x0}" y1="${padT - 10}" x2="${x0}" y2="${yScale(0)}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="1 2"/>`;
+      }
+      plotContent += `<text x="${(x0 + x1) / 2}" y="${padT - 14}" text-anchor="middle" font-size="10.5" fill="var(--ink-soft)">Year ${cy + 1}</text>`;
+    }
+
+    if (currentLoc && currentLoc.cycleIndex >= windowStart && currentLoc.cycleIndex <= windowEnd) {
+      const todayDay = (currentLoc.cycleIndex - windowStart) * cycleLen + currentLoc.dayInCycle;
+      if (todayDay >= offset && todayDay <= offset + span) {
+        const mx = xScale(todayDay);
+        plotContent += `<line x1="${mx}" y1="${padT - 8}" x2="${mx}" y2="${yScale(0)}" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 2"/>`;
+        plotContent += `<text x="${mx}" y="${padT - 22}" text-anchor="middle" font-size="10.5" fill="var(--accent)">Today: day ${currentLoc.dayInCycle + 1}</text>`;
+      }
+    }
+
+    if (previewLoc && previewLoc.cycleIndex >= windowStart && previewLoc.cycleIndex <= windowEnd) {
+      const pvDay = (previewLoc.cycleIndex - windowStart) * cycleLen + previewLoc.dayInCycle;
+      if (pvDay >= offset && pvDay <= offset + span) {
+        const px = xScale(pvDay);
+        plotContent += `<line x1="${px}" y1="${padT - 8}" x2="${px}" y2="${yScale(0)}" stroke="var(--moon)" stroke-width="2" stroke-dasharray="3 2"/>`;
+        plotContent += `<text x="${px}" y="${h - 20}" text-anchor="middle" font-size="10.5" fill="var(--moon)">Preview: day ${previewLoc.dayInCycle + 1}</text>`;
+        const presentGiant = bossPresentAt(previewLoc, lengths);
+        if (presentGiant === GIANT_UNKNOWN) {
+          plotContent += `<text x="${px}" y="${padT - 12}" text-anchor="middle" font-size="15">\u2753</text>`;
+        } else if (presentGiant) {
+          plotContent += `<text x="${px}" y="${padT - 12}" text-anchor="middle" font-size="15">${presentGiant.icon}</text>`;
+        }
+      }
+    }
+
+    content += `<g clip-path="url(#chartPlotClip)">${plotContent}</g>`;
+
+    content += `<line x1="${padL}" y1="${yScale(0)}" x2="${w - padR}" y2="${yScale(0)}" stroke="var(--ink)" stroke-width="1.6"/>`;
+
+    svg.innerHTML = content;
+  }
+
+  const CHART_YEARS_BACK = 1;
+  const CHART_YEARS_FORWARD = 1;
+  let chartCycleLen = 1;
+  let chartPanOffset = 0;
+
+  function syncChartSlider(cycleLen, currentLoc) {
+    const previewSlider = el('chartPreviewSlider');
+    const scrollSlider = el('chartScrollSlider');
+    if (!previewSlider || !scrollSlider) return;
+    chartCycleLen = cycleLen;
+    chartWindowStart = Math.max(0, currentLoc.cycleIndex - CHART_YEARS_BACK);
+    chartWindowEnd = currentLoc.cycleIndex + CHART_YEARS_FORWARD;
+    const totalDays = (chartWindowEnd - chartWindowStart + 1) * cycleLen;
+    const visibleSpan = cycleLen;
+    const maxOffset = Math.max(0, totalDays - visibleSpan);
+    const todayInWindow = (currentLoc.cycleIndex - chartWindowStart) * cycleLen + currentLoc.dayInCycle;
+    chartPanOffset = Math.min(maxOffset, Math.max(0, Math.round(todayInWindow - visibleSpan / 2)));
+
+    previewSlider.min = 0;
+    previewSlider.max = totalDays - 1;
+    previewSlider.value = todayInWindow;
+
+    scrollSlider.min = 0;
+    scrollSlider.max = maxOffset;
+    scrollSlider.value = chartPanOffset;
+  }
+
+  function chartDayYearAt(d) {
+    return { year: chartWindowStart + Math.floor(d / chartCycleLen) + 1, day: (d % chartCycleLen) + 1 };
+  }
+
+  function redrawChart() {
+    const lengths = getLengths();
+    const order = getOrderFromStart();
+    const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+    const currentLoc = locateDay(day, lengths, order);
+    const cycleLen = getCycleLength(lengths);
+    const visibleSpan = cycleLen;
+    const totalDays = (chartWindowEnd - chartWindowStart + 1) * cycleLen;
+    const maxOffset = Math.max(0, totalDays - visibleSpan);
+    chartPanOffset = Math.min(maxOffset, Math.max(0, chartPanOffset));
+
+    const previewDayInWindow = Math.max(0, parseInt(el('chartPreviewSlider').value, 10) || 0);
+    const previewAbsoluteDay = chartWindowStart * cycleLen + previewDayInWindow + 1;
+    const previewLoc = locateDay(previewAbsoluteDay, lengths, order);
+
+    const winLabel = el('chartWindowLabel');
+    if (winLabel) winLabel.textContent = `Data spans years ${chartWindowStart + 1}–${chartWindowEnd + 1}`;
+    const previewYD = chartDayYearAt(previewDayInWindow);
+    const previewLabel = el('chartPreviewDayLabel');
+    if (previewLabel) previewLabel.textContent = `year ${previewYD.year} day ${previewYD.day}`;
+
+    renderChart(lengths, order, currentLoc, chartWindowStart, chartWindowEnd, chartPanOffset, visibleSpan, previewLoc);
+    renderChartExtras(previewAbsoluteDay, previewLoc, lengths);
+    applySeasonBackground(previewLoc.season);
+  }
+
+  function renderChartExtras(previewAbsoluteDay, previewLoc, lengths) {
+    const dayIndex = (previewAbsoluteDay - 1) % MOON_CYCLE;
+    const phaseIdx = moonPhaseIndexFromDayIndex(dayIndex);
+    const badge = el('chartMoonBadge');
+    const nameEl = el('chartMoonPhaseName');
+    const subEl = el('chartMoonSubtext');
+    if (badge) badge.textContent = MOON_PHASE_ICONS[phaseIdx];
+    if (nameEl) nameEl.textContent = MOON_PHASE_NAMES[phaseIdx];
+    if (subEl) subEl.textContent = `On year ${previewLoc.cycleIndex + 1}, day ${previewLoc.dayInCycle + 1}`;
+
+    const season = previewLoc.season;
+    const giant = bossPresentAt(previewLoc, lengths);
+    const seasonGiant = GIANTS[season];
+
+    const titleEl = el('chartBossTitle');
+    const blurbEl = el('chartBossBlurb');
+    const linkEl = el('chartBossLink');
+    if (giant === GIANT_UNKNOWN) {
+      if (titleEl) titleEl.textContent = `Unknown \u2014 ${seasonGiant ? seasonGiant.icon + ' ' + seasonGiant.name : 'this giant'}?`;
+      if (blurbEl) blurbEl.textContent = `This spring started before the world was old enough for the normal timing, and whether Moose/Goose's clock restarts the way Deerclops/Bearger/Antlion's do isn't confirmed. It might appear sometime from day ${GIANT_MIN_DAY} through the end of spring \u2014 genuinely unclear.`;
+      if (linkEl) { linkEl.href = seasonGiant ? seasonGiant.link : '#'; linkEl.style.display = seasonGiant ? 'inline' : 'none'; }
+    } else if (giant) {
+      if (titleEl) titleEl.textContent = `Current boss: ${giant.icon} ${giant.name}`;
+      if (blurbEl) blurbEl.textContent = giant.blurb;
+      if (linkEl) { linkEl.href = giant.link; linkEl.style.display = 'inline'; }
+    } else {
+      if (titleEl) titleEl.textContent = 'No giant currently active';
+      if (blurbEl) blurbEl.textContent = `On this day, ${seasonGiant ? seasonGiant.name : 'that season\u2019s giant'} likely hasn't spawned yet (or already left).`;
+      if (linkEl) linkEl.style.display = 'none';
+    }
+  }
+
+  function renderMoon(day) {
+    const dayIndex = (day - 1) % MOON_CYCLE;
+    const phaseIdx = moonPhaseIndexFromDayIndex(dayIndex);
+
+    el('moonBadge').textContent = MOON_PHASE_ICONS[phaseIdx];
+    el('moonPhaseName').innerHTML = `<a href="${MOON_LINK}" target="_blank" rel="noopener">${MOON_PHASE_NAMES[phaseIdx]}</a>`;
+
+    const daysToFull = (10 - dayIndex + MOON_CYCLE) % MOON_CYCLE;
+    const daysToNew = (0 - dayIndex + MOON_CYCLE) % MOON_CYCLE;
+
+    el('moonNextFull').textContent = daysToFull === 0
+      ? `Full moon tonight (day ${day})`
+      : `Full moon in ${daysToFull} day${daysToFull === 1 ? '' : 's'} (day ${day + daysToFull})`;
+    el('moonNextNew').textContent = daysToNew === 0
+      ? `New moon tonight (day ${day})`
+      : `New moon in ${daysToNew} day${daysToNew === 1 ? '' : 's'} (day ${day + daysToNew})`;
+
+    const bar = el('moonBar');
+    bar.innerHTML = '';
+    MOON_PHASE_ICONS.forEach((icon, i) => {
+      const seg = document.createElement('div');
+      seg.className = 'moon-seg' + (i === phaseIdx ? ' current' : '');
+      seg.textContent = icon;
+      seg.title = MOON_PHASE_NAMES[i];
+      seg.addEventListener('click', () => {
+        document.querySelectorAll('#moonBar .moon-seg').forEach(s => s.classList.remove('selected'));
+        seg.classList.add('selected');
+        const daysUntil = (MOON_BOUNDS[i] - dayIndex + MOON_CYCLE) % MOON_CYCLE;
+        const targetDay = day + daysUntil;
+        const text = daysUntil === 0
+          ? `${MOON_PHASE_NAMES[i]} is tonight (day ${day})`
+          : `${MOON_PHASE_NAMES[i]} in ${daysUntil} day${daysUntil === 1 ? '' : 's'} (day ${targetDay})`;
+        el('moonClickInfo').textContent = text;
+      });
+      bar.appendChild(seg);
+    });
+  }
+
+  function giantPrediction(season, startDay, len, cycleIndex) {
+    if (len <= 0) return null;
+    const seasonStartAbsolute = startDay - 1;
+    if (season === 'winter' || season === 'autumn' || season === 'summer') {
+      const result = giantSpawnDayNumber(season, seasonStartAbsolute, len);
+      if (result == null) return { text: 'not yet', note: 'world too young yet' };
+      const note = season === 'winter' ? 'night of that day' : (season === 'summer' ? 'first dry day, weather-dependent' : null);
+      const suffix = result.verified ? '' : ' (estimate \u2014 not independently verified)';
+      return { text: `~day ${Math.floor(result.day)}${suffix}`, note };
+    }
+    if (season === 'spring') {
+      const dayLow = seasonStartAbsolute + (2 / 20) * len;
+      const dayHigh = seasonStartAbsolute + (4 / 20) * len;
+      const seasonEndDay = seasonStartAbsolute + len;
+      if (seasonEndDay < GIANT_MIN_DAY) return { text: 'not yet', note: 'world too young yet' };
+      if (dayHigh < GIANT_MIN_DAY) {
+        return { text: `unknown (day ${GIANT_MIN_DAY}\u2013${seasonEndDay}?)`, note: 'restart behavior not confirmed for Moose/Goose' };
+      }
+      return { text: `day ${Math.floor(dayLow)}\u2013${Math.floor(dayHigh)}`, note: null };
+    }
+    return null;
+  }
+
+  function findOccurrence(lengths, order, cycleIndex, targetSeason) {
+    const cycleLen = getCycleLength(lengths);
+    const base = cycleIndex * cycleLen;
+    let offset = 0;
+    for (const s of order) {
+      const len = lengths[s];
+      if (len <= 0) continue;
+      if (s === targetSeason) return { startDay: base + offset + 1, len, cycleIndex };
+      offset += len;
+    }
+    return null;
+  }
+
+  function nextOrCurrentOccurrence(day, lengths, order, targetSeason, currentLoc) {
+    const cur = findOccurrence(lengths, order, currentLoc.cycleIndex, targetSeason);
+    if (!cur) return null;
+    const endDay = cur.startDay + cur.len - 1;
+    if (endDay >= day) return cur;
+    return findOccurrence(lengths, order, currentLoc.cycleIndex + 1, targetSeason);
+  }
+
+  function renderGiants(day, lengths, order, currentLoc) {
+    const list = el('giantList');
+    list.innerHTML = '';
+    order.forEach(s => {
+      if (lengths[s] <= 0) return;
+      const g = GIANTS[s];
+      const occ = nextOrCurrentOccurrence(day, lengths, order, s, currentLoc);
+      const pred = occ ? giantPrediction(s, occ.startDay, occ.len, occ.cycleIndex) : null;
+      const li = document.createElement('li');
+      if (s === currentLoc.season) li.className = 'is-current';
+      const predText = pred ? pred.text : '';
+      li.innerHTML = `<span class="g-season"><span class="g-swatch" style="background:var(--${s})"></span><a href="${SEASON_LINKS[s]}" target="_blank" rel="noopener">${s.charAt(0).toUpperCase() + s.slice(1)}</a></span><span class="g-name"><span class="giant-icon">${g.icon}</span> <a href="${g.link}" target="_blank" rel="noopener">${g.name}</a> — ${predText}</span>`;
+      list.appendChild(li);
+    });
+  }
+
+  function renderMoonLog(currentDay) {
+    const cycles = Math.min(400, Math.max(1, parseInt(moonCyclesInput.value, 10) || 20));
+    const tbody = el('moonLogBody');
+    tbody.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    const currentDayIndex = (currentDay - 1) % MOON_CYCLE;
+    const currentCycleIndex = Math.floor((currentDay - 1) / MOON_CYCLE);
+    const currentPhaseIdx = moonPhaseIndexFromDayIndex(currentDayIndex);
+
+    for (let c = 0; c < cycles; c++) {
+      const base = c * MOON_CYCLE;
+      for (let p = 0; p < 8; p++) {
+        if (activeMoonFilter !== 'all' && parseInt(activeMoonFilter, 10) !== p) continue;
+        const startDay = base + MOON_BOUNDS[p] + 1;
+        const tr = document.createElement('tr');
+        const isCurrent = (c === currentCycleIndex && p === currentPhaseIdx);
+        if (isCurrent) tr.className = 'current-row';
+        tr.innerHTML = `<td>${c + 1}</td><td>${MOON_PHASE_ICONS[p]} <a href="${MOON_LINK}" target="_blank" rel="noopener">${MOON_PHASE_NAMES[p]}</a></td><td>${startDay}</td>`;
+        frag.appendChild(tr);
+      }
+    }
+    tbody.appendChild(frag);
+  }
+
+  function renderUpcoming(day, lengths, order) {
+    const list = el('upcomingList');
+    list.innerHTML = '';
+    let cursorDay = day;
+    for (let i = 0; i < 4; i++) {
+      const curLoc = locateDay(cursorDay, lengths, order);
+      const daysUntil = curLoc.daysLeftInSeason;
+      const boundaryDay = cursorDay + daysUntil;
+      const nextS = nextSeasonAfter(curLoc.season, order);
+      const li = document.createElement('li');
+      const countText = daysUntil === 0 ? 'today' : (daysUntil === 1 ? 'tomorrow' : `in ${daysUntil} days (day ${boundaryDay})`);
+      li.innerHTML = `<span class="u-season"><span class="swatch" style="background:var(--${nextS})"></span><a href="${SEASON_LINKS[nextS]}" target="_blank" rel="noopener">${nextS}</a> begins</span><span class="u-count">${countText}</span>`;
+      list.appendChild(li);
+      cursorDay = boundaryDay;
+    }
+  }
+
+  function renderLog(currentDay, lengths, order) {
+    const years = Math.min(200, Math.max(1, parseInt(yearsInput.value, 10) || 15));
+    const cycleLen = getCycleLength(lengths);
+    const tbody = el('logBody');
+    tbody.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    const currentLoc = locateDay(currentDay, lengths, order);
+
+    for (let y = 0; y < years; y++) {
+      const base = y * cycleLen;
+      let offset = 0;
+      order.forEach(s => {
+        const len = lengths[s];
+        if (len <= 0) return;
+        const startDay = base + offset + 1;
+        const endDay = base + offset + len;
+        offset += len;
+
+        if (activeFilter !== 'all' && activeFilter !== s) return;
+
+        const tr = document.createElement('tr');
+        const isCurrent = (y === currentLoc.cycleIndex && s === currentLoc.season);
+        if (isCurrent) tr.className = 'current-row';
+        const pred = giantPrediction(s, startDay, len, y);
+        const giantCell = pred ? `<a href="${GIANTS[s].link}" target="_blank" rel="noopener"><span class="giant-icon">${GIANTS[s].icon}</span> ${pred.text}</a>` : '\u2014';
+        tr.innerHTML = `<td>${y + 1}</td><td><span class="dot" style="background:var(--${s})"></span><a href="${SEASON_LINKS[s]}" target="_blank" rel="noopener">${s.charAt(0).toUpperCase() + s.slice(1)}</a></td><td>${startDay}\u2013${endDay}</td><td>${giantCell}</td>`;
+        frag.appendChild(tr);
+      });
+    }
+    tbody.appendChild(frag);
+  }
+
+  dayInput.addEventListener('input', render);
+  el('bumpDay').addEventListener('click', () => {
+    dayInput.value = (parseInt(dayInput.value, 10) || 1) + 1;
+    render();
+  });
+  Object.values(lenInputs).forEach(inp => inp.addEventListener('change', render));
+  startSeasonSel.addEventListener('change', render);
+  yearsInput.addEventListener('input', render);
+  moonCyclesInput.addEventListener('input', render);
+
+  settingsToggle.addEventListener('click', () => {
+    const isHidden = settingsPanel.style.display === 'none';
+    settingsPanel.style.display = isHidden ? '' : 'none';
+    settingsToggle.textContent = isHidden ? 'Hide' : 'Show';
+  });
+
+  el('moonLogToggle').addEventListener('click', () => {
+    const panel = el('moonLogPanel');
+    const isHidden = panel.style.display === 'none';
+    panel.style.display = isHidden ? '' : 'none';
+    el('moonLogToggle').textContent = isHidden ? 'Hide' : 'Show';
+  });
+
+  el('giantsToggle').addEventListener('click', () => {
+    const panel = el('giantsPanel');
+    const isHidden = panel.style.display === 'none';
+    panel.style.display = isHidden ? '' : 'none';
+    el('giantsToggle').textContent = isHidden ? 'Hide' : 'Show';
+  });
+
+  el('resetDefaults').addEventListener('click', () => {
+    SEASON_ORDER.forEach(s => { lenInputs[s].value = 'default'; });
+    startSeasonSel.value = 'autumn';
+    render();
+  });
+
+  document.querySelectorAll('#filters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#filters .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.getAttribute('data-season');
+      const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+      renderLog(day, getLengths(), getOrderFromStart());
+    });
+  });
+
+  document.querySelectorAll('#moonFilters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#moonFilters .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeMoonFilter = chip.getAttribute('data-phase');
+      const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+      renderMoonLog(day);
+    });
+  });
+
+  let seasonBgEnabled = false;
+
+  function applySeasonBackground(currentSeason) {
+    if (seasonBgEnabled && currentSeason) {
+      document.body.setAttribute('data-season-bg', currentSeason);
+    } else {
+      document.body.removeAttribute('data-season-bg');
+    }
+  }
+
+  el('seasonBgToggle').addEventListener('click', () => {
+    seasonBgEnabled = !seasonBgEnabled;
+    el('seasonBgToggle').classList.toggle('active', seasonBgEnabled);
+    safeSet('dst_season_bg', seasonBgEnabled ? '1' : '');
+    const lengths = getLengths();
+    const order = getOrderFromStart();
+    const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+    const loc = locateDay(day, lengths, order);
+    applySeasonBackground(loc ? loc.season : null);
+  });
+
+  el('bossWindowToggle').addEventListener('click', () => {
+    showBossWindow = !showBossWindow;
+    el('bossWindowToggle').classList.toggle('active', showBossWindow);
+    redrawChart();
+  });
+
+  el('seasonChartBgToggle').addEventListener('click', () => {
+    showSeasonChartBg = !showSeasonChartBg;
+    el('seasonChartBgToggle').classList.toggle('active', showSeasonChartBg);
+    redrawChart();
+  });
+
+  el('chartPreviewSlider').addEventListener('input', redrawChart);
+
+  (function setupPreviewStepButtons() {
+    const slider = el('chartPreviewSlider');
+    function step(delta) {
+      const min = parseInt(slider.min, 10) || 0;
+      const max = parseInt(slider.max, 10) || 0;
+      const next = Math.max(min, Math.min(max, (parseInt(slider.value, 10) || 0) + delta));
+      if (next === (parseInt(slider.value, 10) || 0)) return;
+      slider.value = next;
+      redrawChart();
+    }
+    function bind(btn, delta) {
+      let delayTimer = null;
+      let repeatTimer = null;
+      const stop = () => {
+        clearTimeout(delayTimer);
+        clearInterval(repeatTimer);
+        delayTimer = repeatTimer = null;
+      };
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        step(delta);
+        delayTimer = setTimeout(() => {
+          repeatTimer = setInterval(() => step(delta), 70);
+        }, 400);
+      });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+      btn.addEventListener('click', (e) => { if (e.detail === 0) step(delta); });
+    }
+    bind(el('previewPrevBtn'), -1);
+    bind(el('previewNextBtn'), 1);
+  })();
+
+  el('chartResetBtn').addEventListener('click', () => {
+    const lengths = getLengths();
+    const order = getOrderFromStart();
+    const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+    const cycleLen = getCycleLength(lengths);
+    const loc = locateDay(day, lengths, order);
+    syncChartSlider(cycleLen, loc);
+    redrawChart();
+  });
+
+  el('chartScrollSlider').addEventListener('input', () => {
+    chartPanOffset = Math.max(0, parseInt(el('chartScrollSlider').value, 10) || 0);
+    redrawChart();
+  });
+
+  (function setupChartScrub() {
+    const chartEl = el('seasonChart');
+    const previewSlider = el('chartPreviewSlider');
+    if (!chartEl || !previewSlider) return;
+    let scrubbing = false;
+
+    function scrubTo(clientX) {
+      const rect = chartEl.getBoundingClientRect();
+      if (!rect.width) return;
+      const fraction = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      const lengths = getLengths();
+      const cycleLen = getCycleLength(lengths);
+      const visibleSpan = cycleLen;
+      const dayInWindow = Math.round(chartPanOffset + fraction * visibleSpan);
+      const max = parseInt(previewSlider.max, 10) || 0;
+      previewSlider.value = Math.min(max, Math.max(0, dayInWindow));
+      redrawChart();
+    }
+
+    chartEl.addEventListener('pointerdown', (e) => {
+      scrubbing = true;
+      chartEl.setPointerCapture(e.pointerId);
+      scrubTo(e.clientX);
+    });
+    chartEl.addEventListener('pointermove', (e) => { if (scrubbing) scrubTo(e.clientX); });
+    chartEl.addEventListener('pointerup', () => { scrubbing = false; });
+    chartEl.addEventListener('pointercancel', () => { scrubbing = false; });
+  })();
+
+  (function setupCycleBarPreview() {
+    const barEl = el('cycleBar');
+    if (!barEl) return;
+    let touchDragging = false;
+
+    function getPreviewMarker() {
+      let m = el('cycleBarPreviewMarker');
+      if (!m) {
+        m = document.createElement('div');
+        m.id = 'cycleBarPreviewMarker';
+        m.className = 'cycle-marker';
+        el('cycleBarWrap').appendChild(m);
+      }
+      return m;
+    }
+
+    function showPreview(clientX) {
+      const rect = barEl.getBoundingClientRect();
+      if (!rect.width) return;
+      const lengths = getLengths();
+      const order = getOrderFromStart();
+      const cycleLen = getCycleLength(lengths);
+      if (cycleLen <= 0) return;
+      const fraction = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      const dayInCycle = Math.min(cycleLen - 1, Math.floor(fraction * cycleLen));
+      const day = Math.max(1, parseInt(dayInput.value, 10) || 1);
+      const currentLoc = locateDay(day, lengths, order);
+      const absoluteDay = currentLoc.cycleIndex * cycleLen + dayInCycle + 1;
+      const previewLoc = locateDay(absoluteDay, lengths, order);
+      const seasonLabel = previewLoc.season.charAt(0).toUpperCase() + previewLoc.season.slice(1);
+
+      const marker = getPreviewMarker();
+      marker.style.left = (dayInCycle / cycleLen * 100) + '%';
+      marker.style.display = 'flex';
+      marker.innerHTML = `<span class="marker-label preview-label">Day ${dayInCycle + 1} — ${seasonLabel}</span><span class="marker-line"></span>`;
+      applySeasonBackground(previewLoc.season);
+    }
+
+    function hidePreview() {
+      const m = el('cycleBarPreviewMarker');
+      if (m) m.style.display = 'none';
+      const lengths2 = getLengths();
+      const order2 = getOrderFromStart();
+      const day2 = Math.max(1, parseInt(dayInput.value, 10) || 1);
+      const currentLoc2 = locateDay(day2, lengths2, order2);
+      if (currentLoc2) applySeasonBackground(currentLoc2.season);
+    }
+
+    barEl.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse') return;
+      touchDragging = true;
+      barEl.setPointerCapture(e.pointerId);
+      showPreview(e.clientX);
+    });
+    barEl.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'mouse') { showPreview(e.clientX); return; }
+      if (touchDragging) showPreview(e.clientX);
+    });
+    barEl.addEventListener('pointerup', (e) => {
+      if (e.pointerType !== 'mouse') { touchDragging = false; hidePreview(); }
+    });
+    barEl.addEventListener('pointercancel', () => { touchDragging = false; hidePreview(); });
+    barEl.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') hidePreview(); });
+  })();
+
+  document.querySelectorAll('#tipsFilters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#tipsFilters .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeTipSeason = chip.getAttribute('data-tip-season');
+      renderTips(activeTipSeason);
+    });
+  });
+
+  document.querySelectorAll('#pageNav .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const target = chip.getAttribute('data-page-tab');
+      document.querySelectorAll('#pageNav .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      document.querySelectorAll('.card[data-page]').forEach(card => {
+        card.classList.toggle('page-visible', card.getAttribute('data-page') === target);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'light' ? null : 'light';
+    if (next) {
+      document.documentElement.setAttribute('data-theme', next);
+      safeSet('dst_theme', next);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      safeSet('dst_theme', '');
+    }
+  });
+
+  // Original synthesized click sounds (Web Audio API) for toggle and
+  // expand/collapse buttons — filtered noise bursts (percussive, like a
+  // wood knock/tock) rather than clean oscillator tones, which read as too
+  // electronic/arcade-like.
+  let audioCtx = null;
+  function getAudioCtx() {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch (e) { return null; }
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function playWoodKnock(filterFreq, duration, volume, delay) {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    const startAt = ctx.currentTime + (delay || 0);
+    const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * duration));
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const bandpass = ctx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.value = filterFreq;
+    bandpass.Q.value = 1.0;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(volume, startAt);
+    gain.gain.exponentialRampToValueAtTime(0.001, startAt + duration);
+    noise.connect(bandpass);
+    bandpass.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start(startAt);
+    noise.stop(startAt + duration);
+  }
+  function playClickSound() { playWoodKnock(950, 0.05, 0.55, 0); }
+  function playExpandSound() { playWoodKnock(650, 0.05, 0.48, 0); playWoodKnock(1050, 0.055, 0.45, 0.055); }
+  function playCollapseSound() { playWoodKnock(1050, 0.05, 0.48, 0); playWoodKnock(550, 0.07, 0.45, 0.055); }
+
+  document.addEventListener('click', (e) => {
+    const panelBtn = e.target.closest('.panel-toggle');
+    if (panelBtn) {
+      panelBtn.textContent.trim() === 'Show' ? playCollapseSound() : playExpandSound();
+      return;
+    }
+    const toggleBtn = e.target.closest('#themeToggle, #seasonBgToggle, #bossWindowToggle, #seasonChartBgToggle, #bumpDay, .chip');
+    if (toggleBtn) playClickSound();
+  });
+
+  loadState();
+  renderTips(activeTipSeason);
+  render();
+})();
+</script>
+</body>
+</html>
