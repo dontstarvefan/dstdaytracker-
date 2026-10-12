@@ -73,6 +73,59 @@
   body[data-season-bg="winter"] { --bg-deep: #050f14; --bg-mid: #142834; }
   body[data-season-bg="spring"] { --bg-deep: #0a140a; --bg-mid: #1d3419; }
   body[data-season-bg="summer"] { --bg-deep: #1b1404; --bg-mid: #3c2e0a; }
+
+  #seasonParticles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    top: -8vh;
+    line-height: 1;
+    will-change: transform, opacity;
+    animation-name: particleFall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes particleFall {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    6% { opacity: 0.9; }
+    94% { opacity: 0.9; }
+    100% { transform: translateY(112vh) translateX(var(--drift, 20px)) rotate(var(--spin, 180deg)); opacity: 0; }
+  }
+  .particle.snowflake { color: #eaf6ff; text-shadow: 0 0 3px rgba(255,255,255,0.7); }
+  .particle.firefly {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #ddc99a;
+    box-shadow: 0 0 6px 2px rgba(221,201,154,0.8);
+    animation-name: fireflyDrift;
+    animation-timing-function: ease-in-out;
+  }
+  @keyframes fireflyDrift {
+    0% { transform: translate(0,0); opacity: 0.15; }
+    25% { opacity: 0.9; }
+    50% { transform: translate(var(--drift, 30px), -36px); opacity: 0.25; }
+    75% { opacity: 0.9; }
+    100% { transform: translate(0,0); opacity: 0.15; }
+  }
+  .particle.raindrop {
+    width: 2px;
+    height: 16px;
+    background: linear-gradient(to bottom, rgba(180,210,255,0) 0%, rgba(180,210,255,0.85) 100%);
+    animation-name: rainFall;
+    animation-timing-function: linear;
+  }
+  @keyframes rainFall {
+    0% { transform: translateY(0); opacity: 0; }
+    5% { opacity: 0.85; }
+    95% { opacity: 0.85; }
+    100% { transform: translateY(112vh); opacity: 0; }
+  }
   body::after {
     content: "";
     position: fixed;
@@ -618,6 +671,8 @@
 </style>
 </head>
 <body>
+
+<div id="seasonParticles" aria-hidden="true"></div>
 
 <div class="topbar">
   <div class="topbar-inner">
@@ -1691,12 +1746,75 @@
   });
 
   let seasonBgEnabled = false;
+  let lastParticleSeason = null;
+
+  const SEASON_PARTICLES = {
+    winter: [{ char: '\u2744', count: 24, duration: [8, 14], size: [10, 18] }],
+    autumn: [{ char: '\ud83c\udf42', count: 16, duration: [6, 10], size: [13, 19] }],
+    spring: [
+      { char: '\ud83c\udf38', count: 12, duration: [7, 11], size: [11, 17] },
+      { rain: true, count: 26 }
+    ],
+    summer: [{ firefly: true, count: 14 }]
+  };
+
+  function spawnSeasonParticles(season) {
+    const container = el('seasonParticles');
+    if (!container) return;
+    if (season === lastParticleSeason) return;
+    lastParticleSeason = season;
+    container.innerHTML = '';
+    const layers = SEASON_PARTICLES[season];
+    if (!layers) return;
+    layers.forEach(config => {
+      for (let i = 0; i < config.count; i++) {
+        const p = document.createElement('div');
+        const left = Math.random() * 100;
+        const delay = Math.random() * 10;
+        if (config.firefly) {
+          p.className = 'particle firefly';
+          const dur = 6 + Math.random() * 6;
+          p.style.left = left + '%';
+          p.style.top = (Math.random() * 90) + '%';
+          p.style.animationDuration = dur + 's';
+          p.style.animationDelay = delay + 's';
+          p.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+        } else if (config.rain) {
+          p.className = 'particle raindrop';
+          const dur = 1 + Math.random() * 1.2;
+          p.style.left = left + '%';
+          p.style.animationDuration = dur + 's';
+          p.style.animationDelay = (Math.random() * 2) + 's';
+        } else {
+          p.className = season === 'winter' ? 'particle snowflake' : 'particle';
+          p.textContent = config.char;
+          const dur = config.duration[0] + Math.random() * (config.duration[1] - config.duration[0]);
+          const size = config.size[0] + Math.random() * (config.size[1] - config.size[0]);
+          p.style.left = left + '%';
+          p.style.fontSize = size + 'px';
+          p.style.animationDuration = dur + 's';
+          p.style.animationDelay = delay + 's';
+          p.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
+          p.style.setProperty('--spin', (Math.random() * 360) + 'deg');
+        }
+        container.appendChild(p);
+      }
+    });
+  }
+
+  function clearSeasonParticles() {
+    const container = el('seasonParticles');
+    if (container) container.innerHTML = '';
+    lastParticleSeason = null;
+  }
 
   function applySeasonBackground(currentSeason) {
     if (seasonBgEnabled && currentSeason) {
       document.body.setAttribute('data-season-bg', currentSeason);
+      spawnSeasonParticles(currentSeason);
     } else {
       document.body.removeAttribute('data-season-bg');
+      clearSeasonParticles();
     }
   }
 
