@@ -586,7 +586,6 @@
   .chip[data-phase].active { background: var(--moon); }
   #bossWindowToggle.active { background: var(--accent); }
   #seasonBgToggle.active { background: var(--accent); }
-  #seasonChartBgToggle.active { background: var(--accent); }
   .chip[data-tip-season="autumn"].active { background: var(--autumn); }
   .chip[data-tip-season="winter"].active { background: var(--winter); }
   .chip[data-tip-season="spring"].active { background: var(--spring); }
@@ -861,7 +860,6 @@
     <div class="card-body">
       <div class="filters" id="chartFilters">
         <button class="chip notch-sm" id="bossWindowToggle" type="button">🛡️ Show presence window</button>
-        <button class="chip notch-sm" id="seasonChartBgToggle" type="button">🖼️ Show season background</button>
       </div>
       <p class="giant-note" style="margin:0 0 0.7rem;">*Presence window shades the days a spawned giant will likely still exist in your world, from its estimated spawn point until its season ends.</p>
       <div class="years-row" style="margin-bottom:0.3rem; justify-content:space-between;">
@@ -1301,7 +1299,7 @@
   }
 
   let showBossWindow = false;
-  let showSeasonChartBg = false;
+  const showSeasonChartBg = true;
   let chartWindowStart = 0;
   let chartWindowEnd = 0;
 
@@ -1364,7 +1362,7 @@
         if (peakInSeason == null || peakInSeason === GIANT_UNKNOWN) return;
         const startX = xScale(seg.start + peakInSeason);
         const endX = xScale(seg.start + seg.len);
-        plotContent += `<rect x="${startX}" y="${padT}" width="${Math.max(0, endX - startX)}" height="${plotH}" fill="var(--${seg.season})" fill-opacity="0.16"/>`;
+        plotContent += `<rect x="${startX}" y="${padT}" width="${Math.max(0, endX - startX)}" height="${plotH}" fill="var(--${seg.season})" fill-opacity="0.55"/>`;
       });
     }
 
@@ -1835,12 +1833,6 @@
     redrawChart();
   });
 
-  el('seasonChartBgToggle').addEventListener('click', () => {
-    showSeasonChartBg = !showSeasonChartBg;
-    el('seasonChartBgToggle').classList.toggle('active', showSeasonChartBg);
-    redrawChart();
-  });
-
   el('chartPreviewSlider').addEventListener('input', redrawChart);
 
   (function setupPreviewStepButtons() {
@@ -2065,7 +2057,7 @@
       panelBtn.textContent.trim() === 'Show' ? playCollapseSound() : playExpandSound();
       return;
     }
-    const toggleBtn = e.target.closest('#themeToggle, #seasonBgToggle, #bossWindowToggle, #seasonChartBgToggle, #bumpDay, .chip');
+    const toggleBtn = e.target.closest('#themeToggle, #seasonBgToggle, #bossWindowToggle, #bumpDay, .chip');
     if (toggleBtn) playClickSound();
   });
 
